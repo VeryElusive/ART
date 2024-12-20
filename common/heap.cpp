@@ -10,7 +10,12 @@
 
 namespace ART
 {
-	void *Alloc(u64 Size)
+	/// <summary>
+	/// allocates memory to the heap.
+	/// </summary>
+	/// <param name="Size">Size of memory allocated</param>
+	/// <returns>Address of the heap allocated memory</returns>
+	void *Alloc(size_t Size)
 	{
 		if(Size == NULL)
 		{
@@ -23,7 +28,13 @@ namespace ART
 #endif
 	}
 
-	void *Realloc(void *Address, u64 Size)
+	/// <summary>
+	/// Resizes memory allocated to the heap.
+	/// </summary>
+	/// <param name="Address">Address of the old heap memory location</param>
+	/// <param name="Size">New size to resize</param>
+	/// <returns>Address of new heap allocation</returns>
+	void *Realloc(void *Address, size_t Size)
 	{
 		if(Size == NULL)
 		{
@@ -43,6 +54,10 @@ namespace ART
 #endif
 	}
 
+	/// <summary>
+	/// Marks memory on the heap as free.
+	/// </summary>
+	/// <param name="Address">Address of heap allocation</param>
 	void Free(void *Address)
 	{
 		if(Address == NULL)

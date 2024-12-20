@@ -4,9 +4,9 @@
 
 namespace ART
 {
-	void *Alloc(u64 Size);
+	void *Alloc(size_t Size);
 
-	void *Realloc(void *Address, u64 Size);
+	void *Realloc(void *Address, size_t Size);
 
 	void Free(void *Address);
 }
