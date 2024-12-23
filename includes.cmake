@@ -1,6 +1,6 @@
 set(ART_SOURCE_FILES
-	common/heap.cpp
-	common/memory.cpp
+	${CMAKE_SOURCE_DIR}/ART/common/heap.cpp
+	${CMAKE_SOURCE_DIR}/ART/common/memory.cpp
 
-	containers/vector.cpp
+	${CMAKE_SOURCE_DIR}/ART/containers/vector.cpp
 )
