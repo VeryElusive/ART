@@ -8,4 +8,6 @@ set(ART_SOURCE_FILES
 	${CMAKE_SOURCE_DIR}/ART/common/string.cpp
 
 	${CMAKE_SOURCE_DIR}/ART/containers/vector.cpp
+
+	${CMAKE_SOURCE_DIR}/ART/hash/luhash.cpp
 )
