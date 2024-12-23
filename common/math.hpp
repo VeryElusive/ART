@@ -33,7 +33,7 @@ namespace ART
 		template <typename T = int>
 		inline T Clamp(T Value, T Minimum, T Maximum)
 		{
-			return Max(Min(Value, Maximum), Minimum);
+			return Max<T>(Min<T>(Value, Maximum), Minimum);
 		}
 	}
 }
