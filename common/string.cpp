@@ -49,3 +49,38 @@ bool ART::String::StringNCompare(const wchar_t *String, const wchar_t *String2, 
 {
 	return (ART::Memcmp(String, String2, StringLength) == 0);
 }
+
+char ART::String::ToLower(char Character)
+{
+	if(Character >= 'A' && Character <= 'Z') 
+	{
+		return Character - 'A' + 'a';
+	}
+	return Character;
+}
+
+char ART::String::ToUpper(char Character)
+{
+	if(Character >= 'a' && Character <= 'z') 
+	{
+		return Character - 'a' + 'A';
+	}
+
+	return Character;
+}
+
+void ART::String::ToLower(char *Character)
+{
+	for(char *Current = Character; *Current != '\0'; Current++)
+	{
+		*Current = ToLower(*Current);
+	}
+}
+
+void ART::String::ToUpper(char *Character)
+{
+	for(char *Current = Character; *Current != '\0'; Current++)
+	{
+		*Current = ToUpper(*Current);
+	}
+}

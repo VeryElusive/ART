@@ -17,5 +17,12 @@ namespace ART
 
 		bool StringNCompare(const char *String, const char *String2, Size_t StringLength);
 		bool StringNCompare(const wchar_t *String, const wchar_t *String2, Size_t StringLength);
+
+
+		char ToLower(char Character);
+		char ToUpper(char Character);
+
+		void ToLower(char *Character);
+		void ToUpper(char *Character);
 	}
 }
