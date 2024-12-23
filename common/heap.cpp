@@ -17,7 +17,7 @@ namespace ART
 	/// </summary>
 	/// <param name="Size">Size of memory allocated</param>
 	/// <returns>Address of the heap allocated memory</returns>
-	void *Alloc(size_t Size)
+	void *Alloc(Size_t Size)
 	{
 #ifdef CUSTOM_MEM_CALLBACK
 		if(HeapAllocCallback)
@@ -44,7 +44,7 @@ namespace ART
 	/// <param name="Address">Address of the old heap memory location</param>
 	/// <param name="Size">New size to resize</param>
 	/// <returns>Address of new heap allocation</returns>
-	void *Realloc(void *Address, size_t Size)
+	void *Realloc(void *Address, Size_t Size)
 	{
 #ifdef CUSTOM_MEM_CALLBACK
 		if(HeapReallocCallback)
