@@ -70,7 +70,7 @@ namespace ART
 		{
 			if(Resize(ElementCount + 1))
 			{
-				return NULL
+				return NULL;
 			}
 		}
 
@@ -110,7 +110,7 @@ namespace ART
 		{
 			if(Resize(ElementCount + 1))
 			{
-				return NULL
+				return NULL;
 			}
 		}
 
@@ -130,7 +130,7 @@ namespace ART
 
 		ElementCount++;
 
-		return &Data[index];
+		return &Data[Index];
 	}
 
 	template<typename T>

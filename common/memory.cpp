@@ -149,12 +149,12 @@ namespace ART
 
 		__m256i Fill32 = _mm256_set1_epi8((char)(Value));
 
-		while(size >= 32)
+		while(Size >= 32)
 		{
 			_mm256_storeu_si256((__m256i *)(d), Fill32);
 
 			d += 32;
-			size -= 32;
+			Size -= 32;
 		}
 
 		while(Size--)
