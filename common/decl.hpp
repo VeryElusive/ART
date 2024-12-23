@@ -17,6 +17,4 @@ typedef u64         unsigned __int64;
 typedef size_t		u64
 #else
 typedef size_t		u32
-#else
-
 #endif
