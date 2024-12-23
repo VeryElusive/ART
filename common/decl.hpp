@@ -13,9 +13,9 @@ typedef __int64            i64;
 typedef unsigned __int64   u64;
 
 #ifdef ART_64BIT
-typedef size_t             u64;
-typedef ptr                u64;
+typedef u64                size_t;
+typedef u64                ptr;
 #else
-typedef size_t             u32;
-typedef ptr                u32;
+typedef u32                size_t;
+typedef u32                ptr;
 #endif
