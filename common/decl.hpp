@@ -4,17 +4,16 @@
 #define FALSE 0
 #define TRUE 1
 
-typedef u8          unsigned char;
-typedef i16         short;
-typedef u16         unsigned short;
-typedef i32         int;
-typedef u32         unsigned int;
-typedef i64         __int64;
-typedef u64         unsigned __int64;
-
+typedef unsigned char      u8;
+typedef short              i16;
+typedef unsigned short     u16;
+typedef int                i32;
+typedef unsigned int       u32;
+typedef __int64            i64;
+typedef unsigned __int64   u64;
 
 #ifdef ART_64BIT
-typedef size_t		u64
+typedef size_t             u64;
 #else
-typedef size_t		u32
+typedef size_t             u32;
 #endif
