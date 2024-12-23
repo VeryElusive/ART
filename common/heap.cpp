@@ -1,11 +1,13 @@
 #include "heap.hpp"
 #include "memory.hpp"
 
+#ifndef CUSTOM_MEM_CALLBACK
 #ifdef _WIN32
 #include <windows.h>
 #else
 #include <sys/mman.h>
 #include <unistd.h>
+#endif
 #endif
 
 namespace ART
@@ -22,7 +24,7 @@ namespace ART
 		{
 			return HeapAllocCallback(Size);
 		}
-#endif
+#else
 		if(Size == NULL)
 		{
 			return NULL;
@@ -32,6 +34,8 @@ namespace ART
 #else
 		return mmap(NULL, Size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
 #endif
+#endif
+
 	}
 
 	/// <summary>
@@ -47,8 +51,7 @@ namespace ART
 		{
 			return HeapReallocCallback(Address, Size);
 		}
-#endif
-
+#else
 		if(Size == NULL)
 		{
 			return NULL;
@@ -65,6 +68,7 @@ namespace ART
 		}
 		return NewAddress;
 #endif
+#endif
 	}
 
 	/// <summary>
@@ -78,8 +82,7 @@ namespace ART
 		{
 			return HeapFreeCallback(Address);
 		}
-#endif
-
+#else
 		if(Address == NULL)
 		{
 			return;
@@ -89,6 +92,7 @@ namespace ART
 		HeapFree(GetProcessHeap(), 0, Address);
 #else
 		munmap(Address, 0);
+#endif
 #endif
 	}
 }
