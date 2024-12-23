@@ -17,6 +17,12 @@ namespace ART
 	/// <returns>Address of the heap allocated memory</returns>
 	void *Alloc(size_t Size)
 	{
+#ifdef CUSTOM_MEM_CALLBACK
+		if(HeapAllocCallback)
+		{
+			return HeapAllocCallback(Size);
+		}
+#endif
 		if(Size == NULL)
 		{
 			return NULL;
@@ -36,6 +42,13 @@ namespace ART
 	/// <returns>Address of new heap allocation</returns>
 	void *Realloc(void *Address, size_t Size)
 	{
+#ifdef CUSTOM_MEM_CALLBACK
+		if(HeapReallocCallback)
+		{
+			return HeapReallocCallback(Address, Size);
+		}
+#endif
+
 		if(Size == NULL)
 		{
 			return NULL;
@@ -60,6 +73,13 @@ namespace ART
 	/// <param name="Address">Address of heap allocation</param>
 	void Free(void *Address)
 	{
+#ifdef CUSTOM_MEM_CALLBACK
+		if(HeapFreeCallback)
+		{
+			return HeapFreeCallback(Address);
+		}
+#endif
+
 		if(Address == NULL)
 		{
 			return;

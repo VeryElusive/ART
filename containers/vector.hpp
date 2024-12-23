@@ -34,8 +34,8 @@ namespace ART
 
 		T *Insert(size_t Index, T NewElement);
 		T *Insert(size_t Index, T *NewElement);
-	private:
 
+	private:
 		T		*Data;
 
 		size_t	ReservedCount;
