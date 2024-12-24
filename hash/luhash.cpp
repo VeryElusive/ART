@@ -6,7 +6,7 @@
 #include <immintrin.h>
 #endif
 
-u32 ART::Hash::LUHash::Hash2(const void *Data, u32 Seed, Size_t Length)
+consteval u32 ART::Hash::LUHash::Hash2Const(const void *Data, u32 Seed, Size_t Length)
 {
 	const u8 *_Data = (u8 *)(Data);
 	u32         Hash = 'LUTL' ^ Seed;
