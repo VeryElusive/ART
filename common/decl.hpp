@@ -4,6 +4,7 @@
 #define FALSE 0
 #define TRUE 1
 
+typedef char			   i8;
 typedef unsigned char      u8;
 typedef short              i16;
 typedef unsigned short     u16;
