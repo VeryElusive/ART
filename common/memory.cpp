@@ -16,8 +16,8 @@ namespace ART
 	/// <param name="Size">size in bytes</param>
 	void Memcpy(void *Dest, const void *Src, size_t Size)
 	{
-		u8			*d = (u8 *)(Dest);
-		const u8	*s = (const u8 *)(Src);
+		u8 *d = (u8 *)(Dest);
+		const u8 *s = (const u8 *)(Src);
 
 		while(Size >= 32)
 		{
@@ -31,7 +31,7 @@ namespace ART
 
 		while(Size >= 8)
 		{
-			*(u64 *)(d)  = *(u64 *)(s);
+			*(u64 *)(d) = *(u64 *)(s);
 
 			s += 8;
 			d += 8;
@@ -77,12 +77,12 @@ namespace ART
 		u8 *d = (u8 *)(Dest);
 		const u8 *s = (const u8 *)(Src);
 
-		if(d < s || d >= s + Size) 
+		if(d < s || d >= s + Size)
 		{
 			// No overlap, can safely copy as in Memcpy
 			Memcpy(Dest, Src, Size);
 		}
-		else 
+		else
 		{
 			// Overlapping memory, copy from end to avoid overwriting
 			d += Size;
@@ -157,10 +157,12 @@ namespace ART
 			Size -= 32;
 		}
 
-		while(Size--)
+		do
 		{
 			*d++ = Value;
-		}
+
+			Size -= 1;
+		} while(Size);
 	}
 
 	/// <summary>
