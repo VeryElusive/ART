@@ -9,9 +9,9 @@ namespace ART
 	typedef void *(*HeapReallocCallback_t)(void *Address, Size_t NewSize);
 	typedef void (*HeapFreeCallback_t)(void *Address);
 
-	HeapAllocCallback_t		HeapAllocCallback;
-	HeapReallocCallback_t	HeapReallocCallback;
-	HeapFreeCallback_t		HeapFreeCallback;
+	inline HeapAllocCallback_t		HeapAllocCallback;
+	inline HeapReallocCallback_t	HeapReallocCallback;
+	inline HeapFreeCallback_t		HeapFreeCallback;
 #endif
 
 	void *Alloc(Size_t Size);
