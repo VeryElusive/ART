@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../common/memory.hpp"
+#include "../concurrency/spinlock.hpp"
 
 namespace ART
 {
@@ -35,10 +36,15 @@ namespace ART
 		T *Insert(size_t Index, T NewElement);
 		T *Insert(size_t Index, T *NewElement);
 
+		void Lock() { Spinlock.Lock(); };
+		void Unlock() { Spinlock.Unlock(); };
+
 	private:
 		T		*Data;
 
 		size_t	ReservedCount;
 		size_t	ElementCount;
+
+		ART::Concurrency::Spinlock Spinlock;
 	};
 }
