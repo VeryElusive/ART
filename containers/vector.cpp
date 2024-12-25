@@ -19,6 +19,8 @@ namespace ART
 	template<typename T>
 	void ART::Vector<T>::Destroy()
 	{
+		ReservedCount	= 0;
+		ElementCount	= 0;
 		Free(Data);
 	}
 
