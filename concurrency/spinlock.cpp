@@ -1,0 +1,23 @@
+#include "spinlock.hpp"
+
+#ifdef _MSC_VER
+#include <intrin.h>
+#elif defined(__GNUC__) || defined(__clang__)
+#include <immintrin.h>
+#endif
+
+void ART::Concurrency::Spinlock::Lock()
+{
+	while(_InterlockedCompareExchange(Lock, 1, 0) != 0)
+	{
+		while(Lock != 0)
+		{
+			_mm_pause();
+		}
+	}
+}
+
+void ART::Concurrency::Spinlock::Unlock()
+{
+	_InterlockedExchange(Lock, 0);
+}
