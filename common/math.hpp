@@ -14,6 +14,14 @@
 #define LLONG_MIN   (-9223372036854775807i64 - 1)
 #define ULLONG_MAX    0xffffffffffffffffui64
 
+#define HALF_PI                 1.5707963267948966f  // half pi
+#define QUARTER_PI              0.7853981633974483f  // quarter pi
+#define PI                      3.1415926535897932f  // pi const
+#define PI_2                    6.2831853071795865f  // pi double
+#define GOLDEN_RATIO            1.6180339887498f     // golden ratio
+#define RADPI                   57.295779513082f     // pi in radians
+#define EPSILON                 1.192092896e-07F        // smallest such that 1.0+FLT_EPSILON != 1.0
+
 namespace ART
 {
 	namespace Math
