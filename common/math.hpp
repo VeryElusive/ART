@@ -2,6 +2,14 @@
 
 #include "decl.hpp"
 
+#ifdef _MSC_VER
+#include <intrin.h>
+#elif defined(__GNUC__) || defined(__clang__)
+#include <immintrin.h>
+#endif
+
+#include <xmmintrin.h>
+
 #define MB_LEN_MAX    5
 #define SHRT_MIN    (-32768)
 #define SHRT_MAX      32767
