@@ -1,5 +1,7 @@
 #pragma once
 
+#include "decl.hpp"
+
 #define MB_LEN_MAX    5
 #define SHRT_MIN    (-32768)
 #define SHRT_MAX      32767
@@ -26,22 +28,35 @@ namespace ART
 {
 	namespace Math
 	{
-		template <typename T = int>
+		template <typename T = i32>
 		inline T Min(T a, T b)
 		{
 			return (a > b) ? b : a;
 		}
 
-		template <typename T = int>
+		template <typename T = i32>
 		inline T Max(T a, T b)
 		{
 			return (a > b) ? a : b;
 		}
 
-		template <typename T = int>
+		template <typename T = i32>
 		inline T Clamp(T Value, T Minimum, T Maximum)
 		{
 			return Max<T>(Min<T>(Value, Maximum), Minimum);
+		}
+
+		float AbsF(float Value)
+		{
+			*(i32 *)(&Value) &= ~(0x80000000);
+
+			return Value;
+		}
+
+		i32 Abs(i32 Value)
+		{
+			Value &= ~(0x80000000);
+			return Value;
 		}
 	}
 }
