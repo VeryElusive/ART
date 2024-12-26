@@ -54,14 +54,14 @@ namespace ART
 			return Max<T>(Min<T>(Value, Maximum), Minimum);
 		}
 
-		float AbsF(float Value)
+		inline float AbsF(float Value)
 		{
 			*(i32 *)(&Value) &= ~(0x80000000);
 
 			return Value;
 		}
 
-		i32 Abs(i32 Value)
+		inline i32 Abs(i32 Value)
 		{
 			Value &= ~(0x80000000);
 			return Value;
@@ -69,7 +69,7 @@ namespace ART
 
 		/* intrin */
 		template <typename T = float>
-		T Cos(T Value)
+		inline T Cos(T Value)
 		{
 			float Out;
 			_mm_store_ss(
@@ -81,7 +81,7 @@ namespace ART
 		}
 
 		template <typename T = float>
-		T Sin(T Value)
+		inline T Sin(T Value)
 		{
 			float Out;
 			_mm_store_ss(
