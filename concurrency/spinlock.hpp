@@ -10,7 +10,7 @@ namespace ART
 			void Lock();
 			void Unlock();
 		private:
-			volatile long Lock;
+			volatile long LockSwitch;
 		};
 	}
 }

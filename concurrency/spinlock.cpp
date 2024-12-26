@@ -8,9 +8,9 @@
 
 void ART::Concurrency::Spinlock::Lock()
 {
-	while(_InterlockedCompareExchange(Lock, 1, 0) != 0)
+	while(_InterlockedCompareExchange(LockSwitch, 1, 0) != 0)
 	{
-		while(Lock != 0)
+		while(LockSwitch != 0)
 		{
 			_mm_pause();
 		}
@@ -19,5 +19,5 @@ void ART::Concurrency::Spinlock::Lock()
 
 void ART::Concurrency::Spinlock::Unlock()
 {
-	_InterlockedExchange(Lock, 0);
+	_InterlockedExchange(LockSwitch, 0);
 }
