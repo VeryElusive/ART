@@ -31,11 +31,15 @@ namespace ART
 			}
 		}
 
-		void Destroy()
+		void Destroy(bool FreeMemory = TRUE)
 		{
 			ReservedCount = 0;
 			ElementCount = 0;
-			ART::Free((void *)Data);
+
+			if(FreeMemory == TRUE)
+			{
+				ART::Free((void *)Data);
+			}
 		}
 
 		T *Get(Size_t Index)
