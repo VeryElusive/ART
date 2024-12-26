@@ -58,5 +58,30 @@ namespace ART
 			Value &= ~(0x80000000);
 			return Value;
 		}
+
+		/* intrin */
+		template <typename T = float>
+		T Cos(T Value)
+		{
+			float Out;
+			_mm_store_ss(
+				&Out,
+				_mm_cos_ps(_mm_load1_ps(&Value))
+			);
+
+			return (T)Out;
+		}
+
+		template <typename T = float>
+		T Sin(T Value)
+		{
+			float Out;
+			_mm_store_ss(
+				&Out,
+				_mm_sin_ps(_mm_load1_ps(&Value))
+			);
+
+			return (T)Out;
+		}
 	}
 }
