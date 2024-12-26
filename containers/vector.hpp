@@ -76,7 +76,7 @@ namespace ART
 		{
 			if(ElementCount >= ReservedCount)
 			{
-				if(Resize(ElementCount + 1))
+				if(Resize(ElementCount + 1) == FALSE)
 				{
 					return NULL;
 				}
@@ -115,7 +115,7 @@ namespace ART
 
 			if(ElementCount >= ReservedCount)
 			{
-				if(Resize(ElementCount + 1))
+				if(Resize(ElementCount + 1) == FALSE)
 				{
 					return NULL;
 				}
