@@ -7,8 +7,6 @@ set(ART_SOURCE_FILES
 	${PROJECT_SOURCE_DIR}/ART/common/memory.cpp
 	${PROJECT_SOURCE_DIR}/ART/common/string.cpp
 
-	${PROJECT_SOURCE_DIR}/ART/containers/vector.cpp
-
 	${PROJECT_SOURCE_DIR}/ART/concurrency/spinlock.cpp
 
 	${PROJECT_SOURCE_DIR}/ART/hash/luhash.cpp
