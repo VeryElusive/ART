@@ -91,5 +91,18 @@ namespace ART
 
 			return (T)Out;
 		}
+
+		template <typename T = float>
+		inline T Lerp(float Factor, T X, T Y)
+		{
+			if(X == Y)
+			{
+				return X;
+			}
+
+			Factor = Clamp<float>(Factor, 0.f, 1.f);
+
+			return (X + (Factor * (Y - X)));
+		}
 	}
 }
