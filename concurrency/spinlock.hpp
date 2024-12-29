@@ -1,5 +1,6 @@
 #pragma once
 
+#ifndef ART_ALREADY_DEFINED
 namespace ART
 {
 	namespace Concurrency
@@ -14,3 +15,6 @@ namespace ART
 		};
 	}
 }
+#else
+#include "ART/concurrency/spinlock.hpp"
+#endif
