@@ -33,11 +33,11 @@ namespace ART
 
 		void Destroy(bool FreeMemory = TRUE)
 		{
-			ReservedCount = 0;
 			ElementCount = 0;
 
 			if(FreeMemory == TRUE)
 			{
+				ReservedCount = 0;
 				ART::Free((void *)Data);
 			}
 		}
