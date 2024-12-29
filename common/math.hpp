@@ -1,7 +1,5 @@
 #pragma once
 
-#ifndef ART_ALREADY_DEFINED
-
 #include "decl.hpp"
 
 #ifdef _MSC_VER
@@ -108,6 +106,3 @@ namespace ART
 		}
 	}
 }
-#else
-#include "ART/common/math.hpp"
-#endif

@@ -1,5 +1,4 @@
 #pragma once
-#ifndef ART_ALREADY_DEFINED
 
 #include "ART/common/decl.hpp"
 
@@ -14,6 +13,3 @@ namespace ART
 		}
 	}
 }
-#else
-#include "ART/hash/luhash.hpp"
-#endif

@@ -1,6 +1,5 @@
 #pragma once
 
-#ifndef ART_ALREADY_DEFINED
 #include "decl.hpp"
 
 namespace ART
@@ -27,6 +26,3 @@ namespace ART
 		void ToUpper(char *Character);
 	}
 }
-#else
-#include "ART/common/string.hpp"
-#endif
