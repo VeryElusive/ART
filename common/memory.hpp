@@ -1,5 +1,6 @@
 #pragma once
 
+#ifndef ART_ALREADY_DEFINED
 #include "../common/decl.hpp"
 
 namespace ART
@@ -12,3 +13,6 @@ namespace ART
 
 	i32 Memcmp(const void *Buf1, const void *Buf2, size_t Size);
 }
+#else
+#include "ART/common/memory.hpp"
+#endif
