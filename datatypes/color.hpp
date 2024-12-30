@@ -65,6 +65,15 @@ namespace ART
 			return *this;
 		}
 
+		Color &operator=(Color color)
+		{
+			r = color.r;
+			g = color.g;
+			b = color.b;
+			a = color.a;
+			return *this;
+		}
+
 		bool operator==(Color color)
 		{
 			return color.r == this->r
