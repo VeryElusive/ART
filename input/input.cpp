@@ -5,6 +5,12 @@
 ART::KeyState_t	KeyStates[256];
 i32				Scroll;
 
+i32 MouseX;
+i32 MouseY;
+
+i32 MouseDeltaX;
+i32 MouseDeltaY;
+
 void ART::ModerateInput()
 {
 	for(Size_t i = 0; i < 256; i++)
@@ -14,12 +20,27 @@ void ART::ModerateInput()
 	}
 
 	Scroll = 0;
+
+	MouseDeltaX = 0;
+	MouseDeltaY = 0;
 }
 
-void ART::UpdateInput(u32 Msg, u32 wParam)
+void ART::UpdateInput(u32 Msg, u32 wParam, u32 lParam)
 {
 	switch(Msg)
 	{
+	case WM_MOUSEMOVE:
+	{
+		const int OldX = MouseX;
+		const int OldY = MouseY;
+
+		MouseX = LOWORD(lParam);
+		MouseY = HIWORD(lParam);
+
+		MouseDeltaX = MouseX - OldX;
+		MouseDeltaY = MouseY - OldY;
+		break;
+	}
 	case WM_KEYDOWN: 
 	{
 		if(wParam < 256 && wParam >= 0)
@@ -95,4 +116,16 @@ i32 ART::GetScrollDistance()
 ART::KeyState_t ART::GetKeyState(u32 KeyCode)
 {
 	return KeyStates[KeyCode];
+}
+
+void ART::GetMousePosition(int &X, int &Y)
+{
+	X = MouseX;
+	Y = MouseY;
+}
+
+void ART::GetMouseDelta(int &X, int &Y)
+{
+	X = MouseDeltaX;
+	Y = MouseDeltaY;
 }
