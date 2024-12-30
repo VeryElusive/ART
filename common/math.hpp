@@ -36,89 +36,86 @@
 
 namespace ART
 {
-	namespace Math
+	template <typename T = i32>
+	inline T Min(T a, T b)
 	{
-		template <typename T = i32>
-		inline T Min(T a, T b)
+		return (a > b) ? b : a;
+	}
+
+	template <typename T = i32>
+	inline T Max(T a, T b)
+	{
+		return (a > b) ? a : b;
+	}
+
+	template <typename T = i32>
+	inline T Clamp(T Value, T Minimum, T Maximum)
+	{
+		return Max<T>(Min<T>(Value, Maximum), Minimum);
+	}
+
+	inline float AbsF(float Value)
+	{
+		*(i32 *)(&Value) &= ~(0x80000000);
+
+		return Value;
+	}
+
+	inline i32 Abs(i32 Value)
+	{
+		Value &= ~(0x80000000);
+		return Value;
+	}
+
+	/* intrin */
+	template <typename T = float>
+	inline T Cos(T Value)
+	{
+		float Out;
+		_mm_store_ss(
+			&Out,
+			_mm_cos_ps(_mm_load1_ps(&Value))
+		);
+
+		return (T)Out;
+	}
+
+	template <typename T = float>
+	inline T Sin(T Value)
+	{
+		float Out;
+		_mm_store_ss(
+			&Out,
+			_mm_sin_ps(_mm_load1_ps(&Value))
+		);
+
+		return (T)Out;
+	}
+
+	template <typename T = float>
+	inline T Lerp(float Factor, T X, T Y)
+	{
+		if(X == Y)
 		{
-			return (a > b) ? b : a;
+			return X;
 		}
 
-		template <typename T = i32>
-		inline T Max(T a, T b)
+		Factor = Clamp<float>(Factor, 0.f, 1.f);
+
+		return (T)(X + (Factor * (Y - X)));
+	}
+
+	template <typename T = float>
+	T Interpolate(float Factor, T X, T Y)
+	{
+		if(X == Y)
 		{
-			return (a > b) ? a : b;
+			return X;
 		}
 
-		template <typename T = i32>
-		inline T Clamp(T Value, T Minimum, T Maximum)
-		{
-			return Max<T>(Min<T>(Value, Maximum), Minimum);
-		}
+		Factor = Clamp<float>(Factor, 0.f, 1.f);
 
-		inline float AbsF(float Value)
-		{
-			*(i32 *)(&Value) &= ~(0x80000000);
-
-			return Value;
-		}
-
-		inline i32 Abs(i32 Value)
-		{
-			Value &= ~(0x80000000);
-			return Value;
-		}
-
-		/* intrin */
-		template <typename T = float>
-		inline T Cos(T Value)
-		{
-			float Out;
-			_mm_store_ss(
-				&Out,
-				_mm_cos_ps(_mm_load1_ps(&Value))
-			);
-
-			return (T)Out;
-		}
-
-		template <typename T = float>
-		inline T Sin(T Value)
-		{
-			float Out;
-			_mm_store_ss(
-				&Out,
-				_mm_sin_ps(_mm_load1_ps(&Value))
-			);
-
-			return (T)Out;
-		}
-
-		template <typename T = float>
-		inline T Lerp(float Factor, T X, T Y)
-		{
-			if(X == Y)
-			{
-				return X;
-			}
-
-			Factor = Clamp<float>(Factor, 0.f, 1.f);
-
-			return (T)(X + (Factor * (Y - X)));
-		}
-
-		template <typename T = float>
-		T Interpolate(float Factor, T X, T Y)
-		{
-			if(X == Y)
-			{
-				return X;
-			}
-
-			Factor = Clamp<float>(Factor, 0.f, 1.f);
-
-			return (T)(Y * Factor + X * (1.f - Factor));
-		}
+		return (T)(Y * Factor + X * (1.f - Factor));
 	}
 }
 #else

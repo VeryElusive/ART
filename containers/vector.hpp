@@ -1,7 +1,5 @@
 #pragma once
 
-#ifndef ART_ALREADY_DEFINED
-
 #include "../common/memory.hpp"
 #include "../common/heap.hpp"
 #include "../concurrency/spinlock.hpp"
@@ -211,6 +209,3 @@ namespace ART
 		ART::Concurrency::Spinlock Spinlock;
 	};
 }
-#else
-#include "ART/containers/vector.hpp"
-#endif
