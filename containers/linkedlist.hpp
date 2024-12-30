@@ -56,7 +56,7 @@ namespace ART
 			Size = 0;
 		}
 
-		Node_t *GetHead()
+		T *GetHead()
 		{
 			if(Head == NULL)
 			{
@@ -66,7 +66,7 @@ namespace ART
 			return Head->Data;
 		}
 
-		Node_t *GetTail()
+		T *GetTail()
 		{
 			if(Tail == NULL)
 			{
