@@ -76,6 +76,16 @@ namespace ART
 			return Tail->Data;
 		}
 
+		Node_t *Iterate(Node_t *Node)
+		{
+			if(Node == NULL)
+			{
+				return Head;
+			}
+
+			return Node->Next;
+		}
+
 	private:
 		Node_t			*Head;
 		Node_t			*Tail;
