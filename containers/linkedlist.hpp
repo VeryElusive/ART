@@ -26,7 +26,7 @@ namespace ART
 			}
 
 			*NewNode = Node_t(Value);
-			if(!Head) 
+			if(Head == NULL) 
 			{
 				Head = Tail = NewNode;
 			}
