@@ -104,7 +104,20 @@ namespace ART
 
 			Factor = Clamp<float>(Factor, 0.f, 1.f);
 
-			return (X + (Factor * (Y - X)));
+			return (T)(X + (Factor * (Y - X)));
+		}
+
+		template <typename T = float>
+		T Interpolate(float Factor, T X, T Y)
+		{
+			if(X == Y)
+			{
+				return X;
+			}
+
+			Factor = Clamp<float>(Factor, 0.f, 1.f);
+
+			return (T)(Y * Factor + X * (1.f - Factor));
 		}
 	}
 }
