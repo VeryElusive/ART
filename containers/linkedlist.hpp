@@ -76,6 +76,16 @@ namespace ART
 			return Tail->Data;
 		}
 
+		Node_t *GetHeadNode()
+		{
+			return Head;
+		}
+
+		Node_t *GetTailNode()
+		{
+			return Head;
+		}
+
 		Node_t *Iterate(Node_t *Node)
 		{
 			if(Node == NULL)
