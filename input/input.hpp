@@ -28,4 +28,7 @@ namespace ART
 
 	// Returns the key state of the VK keycode provided.
 	KeyState_t GetKeyState(u32 KeyCode);
+
+	// Returns if the mouse is hovering over the provided position.
+	bool IsMouseInBounds(int X, int Y, int W, int H);
 }

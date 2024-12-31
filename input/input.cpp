@@ -2,14 +2,14 @@
 
 #include <windows.h>
 
-ART::KeyState_t	KeyStates[256];
-i32				Scroll;
+ART::KeyState_t			KeyStates[256]		= {};
+i32						Scroll				= 0;
 
-i32 MouseX;
-i32 MouseY;
+i32						MouseX				= 0;
+i32						MouseY				= 0;
 
-i32 MouseDeltaX;
-i32 MouseDeltaY;
+i32						MouseDeltaX			= 0;
+i32						MouseDeltaY			= 0;
 
 void ART::ModerateInput()
 {
@@ -128,4 +128,10 @@ void ART::GetMouseDelta(int &X, int &Y)
 {
 	X = MouseDeltaX;
 	Y = MouseDeltaY;
+}
+
+bool ART::IsMouseInBounds(int X, int Y, int W, int H)
+{
+	return (MouseX >= X && MouseX <= (X + W)
+		&& MouseY >= Y && MouseY <= (Y + H));
 }
