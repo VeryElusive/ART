@@ -1,6 +1,5 @@
 #pragma once
 
-#ifndef ART_ALREADY_DEFINED
 #define NULL 0
 #define FALSE 0
 #define TRUE 1
@@ -20,8 +19,4 @@ typedef u64                Ptr_t;
 #else
 typedef u32                Size_t;
 typedef u32                Ptr_t;
-#endif
-
-#else
-#include "ART/commmon/decl.hpp"
 #endif

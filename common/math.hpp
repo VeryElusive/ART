@@ -1,7 +1,5 @@
 #pragma once
 
-#ifndef ART_ALREADY_DEFINED
-
 #include "decl.hpp"
 
 #ifdef _MSC_VER
@@ -54,6 +52,19 @@ namespace ART
 		return Max<T>(Min<T>(Value, Maximum), Minimum);
 	}
 
+	template <typename T = float>
+	T Interpolate(float Factor, T X, T Y)
+	{
+		if(X == Y)
+		{
+			return X;
+		}
+
+		Factor = Clamp<float>(Factor, 0.f, 1.f);
+
+		return (T)(Y * Factor + X * (1.f - Factor));
+	}
+
 	inline float AbsF(float Value)
 	{
 		*(i32 *)(&Value) &= ~(0x80000000);
@@ -68,8 +79,7 @@ namespace ART
 	}
 
 	/* intrin */
-	template <typename T = float>
-	inline T Cos(T Value)
+	inline float Cos(float Value)
 	{
 		float Out;
 		_mm_store_ss(
@@ -80,8 +90,7 @@ namespace ART
 		return (T)Out;
 	}
 
-	template <typename T = float>
-	inline T Sin(T Value)
+	inline float Sin(float Value)
 	{
 		float Out;
 		_mm_store_ss(
@@ -89,11 +98,10 @@ namespace ART
 			_mm_sin_ps(_mm_load1_ps(&Value))
 		);
 
-		return (T)Out;
+		return Out;
 	}
 
-	template <typename T = float>
-	inline T Lerp(float Factor, T X, T Y)
+	inline float Lerp(float Factor, float X, float Y)
 	{
 		if(X == Y)
 		{
@@ -102,22 +110,41 @@ namespace ART
 
 		Factor = Clamp<float>(Factor, 0.f, 1.f);
 
-		return (T)(X + (Factor * (Y - X)));
+		return (X + (Factor * (Y - X)));
 	}
 
-	template <typename T = float>
-	T Interpolate(float Factor, T X, T Y)
+	float ModF(float X, float Y)
 	{
-		if(X == Y)
-		{
-			return X;
-		}
+		float Out;
+		_mm_store_ss(
+			&Out,
+			_mm_fmod_ps(_mm_load_ss(&X), _mm_load_ss(&Y))
+		);
 
-		Factor = Clamp<float>(Factor, 0.f, 1.f);
+		return Out;
+	}
 
-		return (T)(Y * Factor + X * (1.f - Factor));
+	float CeilF(float Value)
+	{
+		float Out;
+		__m128 In = _mm_load_ss(&Value);
+		_mm_store_ss(
+			&Out,
+			_mm_round_ss(In, In, _MM_FROUND_TO_POS_INF | _MM_FROUND_NO_EXC)
+		);
+
+		return Out;
+	}
+
+	float Round(float Value)
+	{
+		float Out;
+		__m128 In = _mm_load_ss(&Value);
+		_mm_store_ss(
+			&Out,
+			_mm_round_ss(In, In, _MM_FROUND_TO_NEAREST_INT | _MM_FROUND_NO_EXC;)
+		);
+
+		return Out;
 	}
 }
-#else
-#include "ART/common/math.hpp"
-#endif

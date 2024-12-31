@@ -1,7 +1,5 @@
 #pragma once
 
-#ifndef ART_ALREADY_DEFINED
-
 #include "../common/decl.hpp"
 #include "../common/math.hpp"
 
@@ -94,7 +92,3 @@ namespace ART
 	};
 
 }
-
-#else
-#include "ART/datatypes/color.hpp"
-#endif

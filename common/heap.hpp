@@ -1,8 +1,5 @@
 #pragma once
 
-#ifndef ART_ALREADY_DEFINED
-#include "decl.hpp"
-
 namespace ART
 {
 #ifdef CUSTOM_MEM_CALLBACK
@@ -21,6 +18,3 @@ namespace ART
 
 	void Free(void *Address);
 }
-#else
-#include "ART/common/heap.hpp"
-#endif

@@ -1,7 +1,5 @@
 #pragma once
 
-#ifndef ART_ALREADY_DEFINED
-
 #include "../common/decl.hpp"
 #include "../common/string.hpp"
 
@@ -33,7 +31,3 @@ namespace ART
 		}
 	}
 }
-
-#else
-#include "ART/hash/fnv1a.hpp"
-#endif
