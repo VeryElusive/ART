@@ -113,7 +113,7 @@ namespace ART
 		return (X + (Factor * (Y - X)));
 	}
 
-	float ModF(float X, float Y)
+	float Mod(float X, float Y)
 	{
 		float Out;
 		_mm_store_ss(
@@ -124,7 +124,7 @@ namespace ART
 		return Out;
 	}
 
-	float CeilF(float Value)
+	float Ceil(float Value)
 	{
 		float Out;
 		__m128 In = _mm_load_ss(&Value);
