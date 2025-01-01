@@ -1,6 +1,10 @@
 #include "input.hpp"
 
+#ifdef _WIN32
 #include <windows.h>
+#else
+
+#endif
 
 ART::KeyState_t			KeyStates[256]		= {};
 i32						Scroll				= 0;
@@ -13,6 +17,7 @@ i32						MouseDeltaY			= 0;
 
 void ART::ModerateInput()
 {
+#ifdef _WIN32
 	for(Size_t i = 0; i < 256; i++)
 	{
 		KeyStates[i].Pressed = FALSE;
@@ -23,8 +28,12 @@ void ART::ModerateInput()
 
 	MouseDeltaX = 0;
 	MouseDeltaY = 0;
+#else
+
+#endif
 }
 
+#ifdef _WIN32
 void ART::UpdateInput(u32 Msg, u32 wParam, u32 lParam)
 {
 	switch(Msg)
@@ -107,6 +116,9 @@ void ART::UpdateInput(u32 Msg, u32 wParam, u32 lParam)
 		break;
 	}
 }
+#else
+
+#endif
 
 i32 ART::GetScrollDistance()
 {
