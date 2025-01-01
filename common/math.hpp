@@ -87,7 +87,7 @@ namespace ART
 			_mm_cos_ps(_mm_load1_ps(&Value))
 		);
 
-		return (T)Out;
+		return Out;
 	}
 
 	inline float Sin(float Value)
@@ -101,7 +101,8 @@ namespace ART
 		return Out;
 	}
 
-	inline float Lerp(float Factor, float X, float Y)
+	template <typename T = float>
+	inline T Lerp(float Factor, T X, T Y)
 	{
 		if(X == Y)
 		{
@@ -110,7 +111,7 @@ namespace ART
 
 		Factor = Clamp<float>(Factor, 0.f, 1.f);
 
-		return (X + (Factor * (Y - X)));
+		return (T)(X + (Factor * (Y - X)));
 	}
 
 	float Mod(float X, float Y)
