@@ -14,15 +14,24 @@ namespace ART
 			Entry.Key = Key;
 			Entry.Value = Value;
 
+			Entry_t *EntryPTR;
+
 			if(Table.Count() == 0)
 			{
-				return Table.PushBack(Entry);
+				EntryPTR = Table.PushBack(Entry);
 			}
 			else
 			{
 				Size_t InsertIndex = Partition(0, Table.Count() - 1, Key);
-				return Table.Insert(InsertIndex, Entry);
+				EntryPTR = Table.Insert(InsertIndex, Entry);
 			}
+
+			if(EntryPTR != NULL)
+			{
+				return &EntryPTR->Value;
+			}
+
+			return NULL;
 		}
 
 		void Remove(Size_t Key)
