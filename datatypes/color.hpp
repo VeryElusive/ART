@@ -43,13 +43,13 @@ namespace ART
 				return *this;
 			}
 
-			t = ART::Math::Min(t, 1.f);
+			t = ART::Min(t, 1.f);
 
 			Color ret(
-				(u8)ART::Math::Clamp(ART::Math::Lerp(t, (float)r, (float)To.r), 0.f, 255.f),
-				(u8)ART::Math::Clamp(ART::Math::Lerp(t, (float)g, (float)To.g), 0.f, 255.f),
-				(u8)ART::Math::Clamp(ART::Math::Lerp(t, (float)b, (float)To.b), 0.f, 255.f),
-				(u8)ART::Math::Clamp(ART::Math::Lerp(t, (float)a, (float)To.a), 0.f, 255.f)
+				(u8)ART::Clamp(ART::Lerp(t, (float)r, (float)To.r), 0.f, 255.f),
+				(u8)ART::Clamp(ART::Lerp(t, (float)g, (float)To.g), 0.f, 255.f),
+				(u8)ART::Clamp(ART::Lerp(t, (float)b, (float)To.b), 0.f, 255.f),
+				(u8)ART::Clamp(ART::Lerp(t, (float)a, (float)To.a), 0.f, 255.f)
 			);
 			return ret;
 		}
