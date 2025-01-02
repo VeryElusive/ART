@@ -52,6 +52,19 @@ namespace ART
 		return Max<T>(Min<T>(Value, Maximum), Minimum);
 	}
 
+	inline float AbsF(float Value)
+	{
+		*(i32 *)(&Value) &= ~(0x80000000);
+
+		return Value;
+	}
+
+	inline i32 Abs(i32 Value)
+	{
+		Value &= ~(0x80000000);
+		return Value;
+	}
+
 	template <typename T = float>
 	T Interpolate(float Factor, T X, T Y)
 	{
@@ -65,17 +78,17 @@ namespace ART
 		return (T)(Y * Factor + X * (1.f - Factor));
 	}
 
-	inline float AbsF(float Value)
+	template <typename T = float>
+	inline T Lerp(float Factor, T X, T Y)
 	{
-		*(i32 *)(&Value) &= ~(0x80000000);
+		if(X == Y)
+		{
+			return X;
+		}
 
-		return Value;
-	}
+		Factor = Clamp<float>(Factor, 0.f, 1.f);
 
-	inline i32 Abs(i32 Value)
-	{
-		Value &= ~(0x80000000);
-		return Value;
+		return (T)(X + (Factor * (Y - X)));
 	}
 
 	/* intrin */
@@ -101,20 +114,62 @@ namespace ART
 		return Out;
 	}
 
-	template <typename T = float>
-	inline T Lerp(float Factor, T X, T Y)
+	inline float Acos(float Value)
 	{
-		if(X == Y)
-		{
-			return X;
-		}
+		float Out;
+		_mm_store_ss(
+			&Out,
+			_mm_acos_ps(_mm_load1_ps(&Value))
+		);
 
-		Factor = Clamp<float>(Factor, 0.f, 1.f);
-
-		return (T)(X + (Factor * (Y - X)));
+		return Out;
 	}
 
-	float Mod(float X, float Y)
+	inline float Sqrt(float Value)
+	{
+		float Out;
+		_mm_store_ss(
+			&Out,
+			_mm_sqrt_ss(_mm_load_ss(&Value))
+		);
+
+		return Out;
+	}
+
+	inline float Rsqrt(float Value)
+	{
+		float Out;
+		_mm_store_ss(
+			&Out,
+			_mm_rsqrt_ss(_mm_load_ss(&Value))
+		);
+
+		return Out;
+	}
+
+	inline float InvSqrt(float Value)
+	{
+		float Out;
+		_mm_store_ss(
+			&Out,
+			_mm_invsqrt_ps(_mm_load_ps1(&Value))
+		);
+
+		return Out;
+	}
+
+	inline float Pow(float Value, float Power)
+	{
+		float Out;
+		_mm_store_ss(
+			&Out,
+			_mm_pow_ps(_mm_load_ps1(&Value), _mm_load_ps1(&Power))
+		);
+
+		return Out;
+	}
+
+	inline float Mod(float X, float Y)
 	{
 		float Out;
 		_mm_store_ss(
