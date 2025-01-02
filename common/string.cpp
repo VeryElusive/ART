@@ -3,12 +3,12 @@
 
 #include "math.hpp"
 
-Size_t ART::String::StringLength(const char *String)
+Size_t ART::StringLength(const char *String)
 {
 	return StringNLength(String, INT_MAX);
 }
 
-Size_t ART::String::StringNLength(const char *String, Size_t MaxLength)
+Size_t ART::StringNLength(const char *String, Size_t MaxLength)
 {
 	Size_t Length = 0;
 	for(; *String != '\0' && MaxLength > 0; ++String, ++Length, --MaxLength) {}
@@ -16,12 +16,12 @@ Size_t ART::String::StringNLength(const char *String, Size_t MaxLength)
 	return Length;
 }
 
-Size_t ART::String::StringLength(const wchar_t *String)
+Size_t ART::StringLength(const wchar_t *String)
 {
 	return StringNLength(String, INT_MAX);
 }
 
-Size_t ART::String::StringNLength(const wchar_t *String, Size_t MaxLength)
+Size_t ART::StringNLength(const wchar_t *String, Size_t MaxLength)
 {
 	Size_t Length = 0;
 	for(; *String != '\0' && MaxLength > 0; ++String, ++Length, --MaxLength) {}
@@ -30,27 +30,27 @@ Size_t ART::String::StringNLength(const wchar_t *String, Size_t MaxLength)
 }
 
 
-bool ART::String::StringCompare(const char *String, const char *String2)
+bool ART::StringCompare(const char *String, const char *String2)
 {
 	return StringNCompare(String, String2, StringLength(String));
 }
 
-bool ART::String::StringNCompare(const char *String, const char *String2, Size_t StringLength)
+bool ART::StringNCompare(const char *String, const char *String2, Size_t StringLength)
 {
 	return (ART::Memcmp(String, String2, StringLength) == 0);
 }
 
-bool ART::String::StringCompare(const wchar_t *String, const wchar_t *String2)
+bool ART::StringCompare(const wchar_t *String, const wchar_t *String2)
 {
 	return StringNCompare(String, String2, StringLength(String));
 }
 
-bool ART::String::StringNCompare(const wchar_t *String, const wchar_t *String2, Size_t StringLength)
+bool ART::StringNCompare(const wchar_t *String, const wchar_t *String2, Size_t StringLength)
 {
 	return (ART::Memcmp(String, String2, StringLength) == 0);
 }
 
-char ART::String::ToLower(char Character)
+char ART::ToLower(char Character)
 {
 	if(Character >= 'A' && Character <= 'Z') 
 	{
@@ -59,7 +59,7 @@ char ART::String::ToLower(char Character)
 	return Character;
 }
 
-char ART::String::ToUpper(char Character)
+char ART::ToUpper(char Character)
 {
 	if(Character >= 'a' && Character <= 'z') 
 	{
@@ -69,7 +69,7 @@ char ART::String::ToUpper(char Character)
 	return Character;
 }
 
-void ART::String::ToLower(char *Character)
+void ART::ToLower(char *Character)
 {
 	for(char *Current = Character; *Current != '\0'; Current++)
 	{
@@ -77,7 +77,7 @@ void ART::String::ToLower(char *Character)
 	}
 }
 
-void ART::String::ToUpper(char *Character)
+void ART::ToUpper(char *Character)
 {
 	for(char *Current = Character; *Current != '\0'; Current++)
 	{
