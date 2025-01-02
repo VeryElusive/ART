@@ -5,7 +5,7 @@
 namespace ART
 {
 	template <typename T>
-	class COrderedMap
+	class OrderedMap
 	{
 	public:
 		void Insert(Size_t Key, T Value)
