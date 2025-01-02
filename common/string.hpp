@@ -1,5 +1,7 @@
 #pragma once
 
+#include "decl.hpp"
+
 namespace ART
 {
 	Size_t StringLength(const char *String);
