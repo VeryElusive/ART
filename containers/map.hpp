@@ -91,14 +91,14 @@ namespace ART
 			{
 				if(Low < Mid)
 				{
-					return Partition(Low, Mid - 1);
+					return Partition(Low, Mid - 1, Key);
 				}
 			}
 			else
 			{
 				if(Mid < High)
 				{
-					return Partition(Mid + 1, High);
+					return Partition(Mid + 1, High, Key);
 				}
 			}
 
