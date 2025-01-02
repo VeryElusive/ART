@@ -137,6 +137,18 @@ namespace ART
 		return Out;
 	}
 
+	float Floor(float Value)
+	{
+		float Out;
+		__m128 In = _mm_load_ss(&Value);
+		_mm_store_ss(
+			&Out,
+			_mm_round_ss(In, In, _MM_FROUND_TO_NEG_INF | _MM_FROUND_NO_EXC)
+		);
+
+		return Out;
+	}
+
 	float Round(float Value)
 	{
 		float Out;
