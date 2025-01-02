@@ -199,6 +199,10 @@ namespace ART
 			return DeleteElement(0);
 		}
 
+		T *GetData()
+		{
+			return Data;
+		}
 
 	private:
 		T *Data;

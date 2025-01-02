@@ -12,4 +12,6 @@ set(ART_SOURCE_FILES
 	${PROJECT_SOURCE_DIR}/ART/hash/luhash.cpp
 
 	${PROJECT_SOURCE_DIR}/ART/input/input.cpp
+
+	${PROJECT_SOURCE_DIR}/ART/sorting/sort.cpp
 )

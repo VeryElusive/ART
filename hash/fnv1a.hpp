@@ -7,27 +7,39 @@ namespace ART
 {
 	namespace FNV1A
 	{
-		typedef Size_t   FNV1A_t;
+#define BASIS 0xCBF29CE484222325ULL
+#define PRIME 0x100000001B3ULL
 
-		constexpr FNV1A_t Basis = 0xCBF29CE484222325ULL;
-		constexpr FNV1A_t Prime = 0x100000001B3ULL;
-
-		consteval FNV1A_t HashConst(const char *String, const FNV1A_t Key = Basis)
+		consteval u64 HashConst(const char *String, const u64 Key = BASIS)
 		{
-			return (String[0] == '\0') ? Key : HashConst(&String[1], (Key ^ FNV1A_t(String[0])) * Prime);
+			return (String[0] == '\0') ? Key : HashConst(&String[1], (Key ^ (u64)(String[0])) * PRIME);
 		}
 
-		inline FNV1A_t Hash(const char *String, FNV1A_t uKey = Basis)
+		inline u64 Hash(const char *String, u64 Key = BASIS)
 		{
-			const Size_t Length = String::StringLength(String);
+			const Size_t Length = ART::StringLength(String);
 
 			for(Size_t i = 0U; i < Length; ++i)
 			{
-				uKey ^= String[i];
-				uKey *= Prime;
+				Key ^= String[i];
+				Key *= PRIME;
 			}
 
-			return uKey;
+			return Key;
 		}
+
+		inline u64 Hash(u8 *Data, Size_t Length, u64 Key = BASIS)
+		{
+			for(Size_t i = 0U; i < Length; ++i)
+			{
+				Key ^= Data[i];
+				Key *= PRIME;
+			}
+
+			return Key;
+		}
+
+#undef BASIS
+#undef PRIME
 	}
 }
