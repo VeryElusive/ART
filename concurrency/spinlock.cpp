@@ -6,7 +6,7 @@
 #include <immintrin.h>
 #endif
 
-void ART::Concurrency::Spinlock::Lock()
+void ART::Spinlock::Lock()
 {
 	while(_InterlockedCompareExchange(&LockSwitch, 1, 0) != 0)
 	{
@@ -17,7 +17,7 @@ void ART::Concurrency::Spinlock::Lock()
 	}
 }
 
-void ART::Concurrency::Spinlock::Unlock()
+void ART::Spinlock::Unlock()
 {
 	_InterlockedExchange(&LockSwitch, 0);
 }
