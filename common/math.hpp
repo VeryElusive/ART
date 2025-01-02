@@ -210,7 +210,7 @@ namespace ART
 		__m128 In = _mm_load_ss(&Value);
 		_mm_store_ss(
 			&Out,
-			_mm_round_ss(In, In, _MM_FROUND_TO_NEAREST_INT | _MM_FROUND_NO_EXC;)
+			_mm_round_ss(In, In, _MM_FROUND_TO_NEAREST_INT | _MM_FROUND_NO_EXC)
 		);
 
 		return Out;
