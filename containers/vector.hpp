@@ -210,6 +210,6 @@ namespace ART
 		Size_t	ReservedCount;
 		Size_t	ElementCount;
 
-		ART::Concurrency::Spinlock Spinlock;
+		ART::Spinlock Spinlock;
 	};
 }
