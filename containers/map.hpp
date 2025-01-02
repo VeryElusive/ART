@@ -63,7 +63,7 @@ namespace ART
 			Entry_t *Entry = Table.Get(Index);
 			if(Entry->Key == Key)
 			{
-				return Entry;
+				return Entry->Value;
 			}
 
 			return NULL;
