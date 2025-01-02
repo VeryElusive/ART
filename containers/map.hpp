@@ -14,7 +14,7 @@ namespace ART
 			Entry.Key = Key;
 			Entry.Value = Value;
 
-			if(Table.Count() <= 1)
+			if(Table.Count() == 0)
 			{
 				Table.PushBack(Entry);
 			}
