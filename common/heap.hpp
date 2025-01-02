@@ -1,4 +1,5 @@
 #pragma once
+#include "decl.hpp"
 
 namespace ART
 {
