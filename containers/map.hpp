@@ -29,7 +29,7 @@ namespace ART
 		{
 			if(Table.Count() == 0)
 			{
-				return
+				return;
 			}
 
 			if(Table.Count() == 1)
