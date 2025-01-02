@@ -60,10 +60,10 @@ namespace ART
 
 			Size_t Index = Partition(0, Table.Count() - 1, Key);
 
-			T* Da = Table.Get(Index);
-			if(Da->Key == Key)
+			Entry_t *Entry = Table.Get(Index);
+			if(Entry->Key == Key)
 			{
-				return Da;
+				return Entry;
 			}
 
 			return NULL;

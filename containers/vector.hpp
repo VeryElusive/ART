@@ -6,6 +6,7 @@
 
 namespace ART
 {
+	// TODO: decide if we should spinlock for every operation.
 	template <typename T>
 	class Vector
 	{
