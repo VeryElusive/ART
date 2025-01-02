@@ -180,7 +180,7 @@ namespace ART
 		return Out;
 	}
 
-	float Ceil(float Value)
+	inline float Ceil(float Value)
 	{
 		float Out;
 		__m128 In = _mm_load_ss(&Value);
@@ -192,7 +192,7 @@ namespace ART
 		return Out;
 	}
 
-	float Floor(float Value)
+	inline float Floor(float Value)
 	{
 		float Out;
 		__m128 In = _mm_load_ss(&Value);
@@ -204,7 +204,7 @@ namespace ART
 		return Out;
 	}
 
-	float Round(float Value)
+	inline float Round(float Value)
 	{
 		float Out;
 		__m128 In = _mm_load_ss(&Value);
