@@ -8,7 +8,7 @@ namespace ART
 	class OrderedMap
 	{
 	public:
-		void Insert(Size_t Key, T Value)
+		T *Insert(Size_t Key, T Value)
 		{
 			Entry_t Entry;
 			Entry.Key = Key;
@@ -16,12 +16,12 @@ namespace ART
 
 			if(Table.Count() == 0)
 			{
-				Table.PushBack(Entry);
+				return Table.PushBack(Entry);
 			}
 			else
 			{
 				Size_t InsertIndex = Partition(0, Table.Count() - 1, Key);
-				Table.Insert(InsertIndex, Entry);
+				return Table.Insert(InsertIndex, Entry);
 			}
 		}
 
@@ -63,7 +63,7 @@ namespace ART
 			Entry_t *Entry = Table.Get(Index);
 			if(Entry->Key == Key)
 			{
-				return Entry->Value;
+				return &Entry->Value;
 			}
 
 			return NULL;
