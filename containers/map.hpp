@@ -1,26 +1,14 @@
 #pragma once
 
 #include "vector.hpp"
-#include "../sorting/sort.hpp"
-#include "../hash/fnv1a.hpp"
 
 namespace ART
 {
-	template <typename ValueType>
-	class HashMap
+	template <typename T>
+	class COrderedMap
 	{
 	public:
-		void Insert(u8 *Key, Size_t KeyLength, ValueType Value)
-		{
-			Insert(ART::FNV1A::Hash(Key, KeyLength), Value);
-		}
-
-		void Remove(u8 *Key, Size_t KeyLength)
-		{
-			Remove(ART::FNV1A::Hash(Key, KeyLength));
-		}
-	private:
-		void Insert(u64 Key, ValueType Value)
+		void Insert(Size_t Key, T Value)
 		{
 			Entry_t Entry;
 			Entry.Key = Key;
@@ -37,7 +25,7 @@ namespace ART
 			}
 		}
 
-		void Remove(u64 Key)
+		void Remove(Size_t Key)
 		{
 			if(Table.Count() == 0)
 			{
@@ -50,12 +38,39 @@ namespace ART
 			}
 			else
 			{
-				Size_t InsertIndex = Partition(0, Table.Count() - 1, Key);
-				Table.DeleteElement(InsertIndex);
+				Size_t RemoveIndex = Partition(0, Table.Count() - 1, Key);
+				if(Table.Get(RemoveIndex)->Key == Key)
+				{
+					Table.DeleteElement(RemoveIndex);
+				}
 			}
 		}
 
-		Size_t Partition(Size_t Low, Size_t High, u64 Key)
+		Size_t Count()
+		{
+			return Table.Count();
+		}
+
+		T *Get(Size_t Key)
+		{
+			if(Table.Count() == 0)
+			{
+				return NULL;
+			}
+
+			Size_t Index = Partition(0, Table.Count() - 1, Key);
+
+			T* Da = Table.Get(Index);
+			if(Da->Key == Key)
+			{
+				return Da;
+			}
+
+			return NULL;
+		}
+
+	private:
+		Size_t Partition(Size_t Low, Size_t High, Size_t Key)
 		{
 			Size_t Mid = Low + (High - Low) / 2;
 
@@ -81,14 +96,12 @@ namespace ART
 			return Mid;
 		}
 
-		struct Entry_t 
+		struct Entry_t
 		{
 			u64 Key;
-			ValueType Value;
+			T Value;
 		};
 
 		ART::Vector<Entry_t> Table;
-		Size_t Size;
-		Size_t Capacity;
 	};
 }
