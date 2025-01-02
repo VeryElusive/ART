@@ -26,7 +26,7 @@ Size_t Partition(T Arr[], Size_t Size)
 	return (i + 1);
 }
 
-template<typename T = Size_t>
+template<typename T>
 void ART::QuickSort(T Arr[], Size_t Size)
 {
 	if(Size <= 1) 
