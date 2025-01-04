@@ -10,4 +10,10 @@ namespace ART
 	public:
 		float X, Y;
 	};
+
+	class Vec4_t
+	{
+	public:
+		float X, Y, W, H;
+	};
 }

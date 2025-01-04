@@ -64,7 +64,7 @@ bool ART::CFile::Open(const char *FilePath, EOpenMode Mode)
 		break;
 	}
 
-	File= open(FilePath, Flags, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+	File = open(FilePath, Flags, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 	return File != -1;
 #endif
 }
