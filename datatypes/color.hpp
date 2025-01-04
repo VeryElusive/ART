@@ -31,12 +31,12 @@ namespace ART
 
 		Color_t ScaleAlpha(float Alpha) const
 		{
-			Color ret = *this;
+			Color_t ret = *this;
 			ret.a = (u8)(((float)ret.a) * Alpha);
 			return ret;
 		}
 
-		Color_t Lerp(const Color &To, float t) const
+		Color_t Lerp(const Color_t &To, float t) const
 		{
 			if(r == To.r && g == To.g && b == To.b && a == To.a)
 			{
