@@ -157,12 +157,12 @@ namespace ART
 			Size -= 32;
 		}
 
-		do
+		while(Size)
 		{
 			*d++ = Value;
 
 			Size -= 1;
-		} while(Size);
+		}
 	}
 
 	/// <summary>
