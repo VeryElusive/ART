@@ -14,23 +14,23 @@ bool ART::CFile::Open(const char *FilePath, EOpenMode Mode)
 	DWORD Access = 0;
 	DWORD Creation = 0;
 
-	switch(Mode) 
+	switch(Mode)
 	{
 	case EOpenMode::READ:
-		Access		= GENERIC_READ;
-		Creation	= OPEN_EXISTING;
+		Access = GENERIC_READ;
+		Creation = OPEN_EXISTING;
 		break;
 	case EOpenMode::WRITE:
-		Access		= GENERIC_WRITE;
-		Creation	= CREATE_ALWAYS;
+		Access = GENERIC_WRITE;
+		Creation = CREATE_ALWAYS;
 		break;
 	case EOpenMode::WRITE_APPEND:
-		Access		= FILE_APPEND_DATA;
-		Creation	= OPEN_ALWAYS;
+		Access = FILE_APPEND_DATA;
+		Creation = OPEN_ALWAYS;
 		break;
 	case EOpenMode::READ_WRITE:
-		Access		= GENERIC_READ | GENERIC_WRITE;
-		Creation	= OPEN_ALWAYS;
+		Access = GENERIC_READ | GENERIC_WRITE;
+		Creation = OPEN_ALWAYS;
 		break;
 	}
 
@@ -48,7 +48,7 @@ bool ART::CFile::Open(const char *FilePath, EOpenMode Mode)
 #else
 	int Flags = 0;
 
-	switch(Mode) 
+	switch(Mode)
 	{
 	case EOpenMode::READ:
 		Flags = O_RDONLY;
@@ -72,13 +72,13 @@ bool ART::CFile::Open(const char *FilePath, EOpenMode Mode)
 void ART::CFile::Close()
 {
 #ifdef _WIN32
-	if(File != (void *)INVALID_HANDLE_VALUE) 
+	if(File != (void *)INVALID_HANDLE_VALUE)
 	{
-		CloseHandle(FileHandle);
+		CloseHandle(File);
 		File = (void *)INVALID_HANDLE_VALUE;
 	}
 #else
-	if(File!= -1) 
+	if(File != -1)
 	{
 		close(File);
 		File = -1;
@@ -89,8 +89,8 @@ void ART::CFile::Close()
 int ART::CFile::Read(void *Buffer, Size_t Size)
 {
 #ifdef _WIN32
-	DWORD bytesRead = 0;
-	if(ReadFile(File, Buffer, Size, &bytesRead, NULL))
+	DWORD BytesRead = 0;
+	if(ReadFile(File, Buffer, Size, &BytesRead, NULL))
 	{
 		return BytesRead;
 	}
@@ -124,7 +124,7 @@ Size_t ART::CFile::GetFileSize()
 	}
 
 	LARGE_INTEGER size;
-	if(GetFileSizeEx(File, &size)) 
+	if(GetFileSizeEx(File, &size))
 	{
 		return (Size_t)(size.QuadPart);
 	}

@@ -4,20 +4,20 @@
 
 namespace ART
 {
-	enum EOpenMode 
+	enum EOpenMode
 	{
-		READ			=	(1 << 0),
-		WRITE			=	(1 << 1),
-		WRITE_APPEND	=	(1 << 2),
-		READ_WRITE		=	(1 << 3)
+		READ = (1 << 0),
+		WRITE = (1 << 1),
+		WRITE_APPEND = (1 << 2),
+		READ_WRITE = (1 << 3)
 	};
 
 	class CFile
 	{
 	public:
-		FileWrapper()
+		CFile()
 		{
-			File = -1;
+			File = (void *)-1;
 		}
 
 		bool Open(const char *FilePath, EOpenMode Mode);

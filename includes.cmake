@@ -14,4 +14,6 @@ set(ART_SOURCE_FILES
 	${PROJECT_SOURCE_DIR}/ART/input/input.cpp
 
 	${PROJECT_SOURCE_DIR}/ART/sorting/sort.cpp
+
+	${PROJECT_SOURCE_DIR}/ART/platform/file.cpp
 )
