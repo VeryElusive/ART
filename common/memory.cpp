@@ -157,12 +157,14 @@ namespace ART
 			Size -= 32;
 		}
 
-		while(Size)
+		while(Size >= 1)
 		{
-			*d++ = Value;
+			d += 1;
+			*(u8 *)(d) = Value;
 
 			Size -= 1;
 		}
+
 	}
 
 	/// <summary>
