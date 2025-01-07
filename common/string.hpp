@@ -18,7 +18,7 @@ namespace ART
 
 	// remember to free after use!
 	char *StringConcat(const char *String1, const char *String2, Size_t String1Length, Size_t String2Length);
-	char *StringConcat(const wchar_t *String1, const wchar_t *String2, Size_t String1Length, Size_t String2Length);
+	wchar_t *StringConcat(const wchar_t *String1, const wchar_t *String2, Size_t String1Length, Size_t String2Length);
 
 
 	char ToLower(char Character);
