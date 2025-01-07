@@ -86,24 +86,24 @@ void ART::ToUpper(char *Character)
 	}
 }
 
-const char *ART::StringConcat(const char *String1, const char *String2, Size_t String1Length, Size_t String2Length)
+char *ART::StringConcat(const char *String1, const char *String2, Size_t String1Length, Size_t String2Length)
 {
-	const char *Out = (const char *)ART::Alloc((String1Length + String2Length + 1) * sizeof(const char));
+	char *Out = (char *)ART::Alloc((String1Length + String2Length + 1) * sizeof(const char));
 
-	ART::Memcpy(Out,					String1, String1Length * sizeof(const char));
-	ART::Memcpy(&Out[String1Length], String2, String2Length * sizeof(const char));
+	ART::Memcpy((void *)Out,					String1, String1Length * sizeof(const char));
+	ART::Memcpy((void *)&Out[String1Length], String2, String2Length * sizeof(const char));
 
 	Out[String1Length + String2Length] = '\0';
 
 	return Out;
 }
 
-const char *ART::StringConcat(const wchar_t *String1, const wchar_t *String2, Size_t String1Length, Size_t String2Length)
+char *ART::StringConcat(const wchar_t *String1, const wchar_t *String2, Size_t String1Length, Size_t String2Length)
 {
-	const wchar_t *Out = (const wchar_t *)ART::Alloc((String1Length + String2Length + 1) * sizeof(const wchar_t));
+	wchar_t *Out = (wchar_t *)ART::Alloc((String1Length + String2Length + 1) * sizeof(const wchar_t));
 
-	ART::Memcpy(Out, String1, String1Length * sizeof(const wchar_t));
-	ART::Memcpy(&Out[String1Length], String2, String2Length * sizeof(const wchar_t));
+	ART::Memcpy((void *)Out, String1, String1Length * sizeof(const wchar_t));
+	ART::Memcpy((void *)&Out[String1Length], String2, String2Length * sizeof(const wchar_t));
 
 	Out[String1Length + String2Length] = '\0';
 
