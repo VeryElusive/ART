@@ -17,8 +17,11 @@ namespace ART
 	bool StringNCompare(const wchar_t *String, const wchar_t *String2, Size_t StringLength);
 
 	// remember to free after use!
-	const char *StringConcat(const char *String1, const char *String2, Size_t String1Length, Size_t String2Length);
-	const wchar_t *StringConcat(const wchar_t *String1, const wchar_t *String2, Size_t String1Length, Size_t String2Length);
+	const char *StringConcat(const char *String1, const char *String2);
+	const wchar_t *StringConcat(const wchar_t *String1, const wchar_t *String2);
+
+	const char *StringNConcat(const char *String1, const char *String2, Size_t String1Length, Size_t String2Length);
+	const wchar_t *StringNConcat(const wchar_t *String1, const wchar_t *String2, Size_t String1Length, Size_t String2Length);
 
 
 	char ToLower(char Character);
