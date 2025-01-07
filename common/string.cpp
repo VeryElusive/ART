@@ -53,7 +53,7 @@ bool ART::StringNCompare(const wchar_t *String, const wchar_t *String2, Size_t S
 
 char ART::ToLower(char Character)
 {
-	if(Character >= 'A' && Character <= 'Z') 
+	if(Character >= 'A' && Character <= 'Z')
 	{
 		return Character - 'A' + 'a';
 	}
@@ -62,7 +62,7 @@ char ART::ToLower(char Character)
 
 char ART::ToUpper(char Character)
 {
-	if(Character >= 'a' && Character <= 'z') 
+	if(Character >= 'a' && Character <= 'z')
 	{
 		return Character - 'a' + 'A';
 	}
@@ -86,19 +86,19 @@ void ART::ToUpper(char *Character)
 	}
 }
 
-char *ART::StringConcat(const char *String1, const char *String2, Size_t String1Length, Size_t String2Length)
+const char *ART::StringConcat(const char *String1, const char *String2, Size_t String1Length, Size_t String2Length)
 {
 	char *Out = (char *)ART::Alloc((String1Length + String2Length + 1) * sizeof(const char));
 
-	ART::Memcpy((void *)Out,					String1, String1Length * sizeof(const char));
+	ART::Memcpy((void *)Out, String1, String1Length * sizeof(const char));
 	ART::Memcpy((void *)&Out[String1Length], String2, String2Length * sizeof(const char));
 
 	Out[String1Length + String2Length] = '\0';
 
-	return Out;
+	return (const char *)Out;
 }
 
-char *ART::StringConcat(const wchar_t *String1, const wchar_t *String2, Size_t String1Length, Size_t String2Length)
+const wchar_t *ART::StringConcat(const wchar_t *String1, const wchar_t *String2, Size_t String1Length, Size_t String2Length)
 {
 	wchar_t *Out = (wchar_t *)ART::Alloc((String1Length + String2Length + 1) * sizeof(const wchar_t));
 
@@ -107,5 +107,5 @@ char *ART::StringConcat(const wchar_t *String1, const wchar_t *String2, Size_t S
 
 	Out[String1Length + String2Length] = '\0';
 
-	return Out;
+	return (const wchar_t *)Out;
 }
