@@ -14,6 +14,9 @@ namespace ART
 		Color_t(int r, int g, int b, int a = 255) :
 			r(r), g(g), b(b), a(a) {}
 
+		Color_t(int r, int g, int b, float a) :
+			r(r), g(g), b(b), a((u8)(int)(255.f * a)) {}
+
 		Color_t(float r, float g, float b, float a = 1.f) :
 			r((u8)(u32)(r * 255.f)), g((u8)(u32)(g * 255.f)), b((u8)(u32)(b * 255.f)), a((u8)(u32)(a * 255.f)) {}
 
