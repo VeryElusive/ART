@@ -119,3 +119,58 @@ const wchar_t *ART::StringNConcat(const wchar_t *String1, const wchar_t *String2
 
 	return (const wchar_t *)Out;
 }
+
+char *ART::IntegerToString(i32 number)
+{
+	// enough to store -2147483648 and null terminator
+	char Buffer[12];
+	bool IsNegative = (number < 0);
+	u32 AbsNumber = IsNegative ? -(u32)(number) : number;
+	char *Ptr = Buffer + sizeof(Buffer) - 1;
+	*Ptr = '\0';
+
+	do 
+	{
+		*--Ptr = '0' + (AbsNumber % 10);
+		AbsNumber /= 10;
+	} while(AbsNumber > 0);
+
+	if(IsNegative) 
+	{
+		*--Ptr = '-';
+	}
+
+	return Ptr;
+}
+
+char *ART::FloatToString(float number, int precision)
+{
+	char Buffer[32];
+	int IntegerPart = (int)(number);
+	char *IntString = IntegerToString(IntegerPart);
+	char *Ptr = Buffer;
+
+	while(*IntString)
+	{
+		*Ptr++ = *IntString++;
+	}
+
+	*Ptr++ = '.';
+
+	float FractionPart = number - IntegerPart;
+	if(FractionPart < 0) 
+	{
+		FractionPart = -FractionPart;
+	}
+
+	for(int i = 0; i < precision; ++i) 
+	{
+		FractionPart *= 10;
+		int Digit = (int)(FractionPart) % 10;
+		*Ptr++ = '0' + Digit;
+	}
+
+	*Ptr = '\0';
+
+	return Buffer;
+}

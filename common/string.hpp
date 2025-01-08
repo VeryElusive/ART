@@ -23,6 +23,9 @@ namespace ART
 	const char *StringNConcat(const char *String1, const char *String2, Size_t String1Length, Size_t String2Length);
 	const wchar_t *StringNConcat(const wchar_t *String1, const wchar_t *String2, Size_t String1Length, Size_t String2Length);
 
+	char *IntegerToString(i32 number);
+	char *FloatToString(float number, int precision = 2);
+
 
 	char ToLower(char Character);
 	char ToUpper(char Character);

@@ -23,12 +23,6 @@ namespace ART
 		Color_t(u8 r, u8 g, u8 b, u8 a = 255) :
 			r(r), g(g), b(b), a(a) {}
 
-
-		u32 ToUInt() const
-		{
-			return ((u32)(r) << 24) | ((u32)(g) << 16) | ((u32)(b) << 8) | (u32)(a);
-		}
-
 		Color_t ScaleAlpha(float Alpha) const
 		{
 			Color_t ret = *this;
