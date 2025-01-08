@@ -127,46 +127,51 @@ void ART::IntegerToString(i32 number, char *Buf, Size_t BufSize)
 	char *Ptr = Buf + BufSize - 1;
 	*Ptr = '\0';
 
-	do 
-	{
+	do {
 		*--Ptr = '0' + (AbsNumber % 10);
 		AbsNumber /= 10;
 	} while(AbsNumber > 0);
 
-	if(IsNegative) 
-	{
+	if(IsNegative) {
 		*--Ptr = '-';
 	}
 
-	return Ptr;
+	Size_t Length = Buf + BufSize - Ptr - 1;
+	for(Size_t i = 0; i < Length; ++i)
+	{
+		Buf[i] = Ptr[i];
+	}
+	Buf[Length] = '\0';
 }
 
 void ART::FloatToString(float number, Size_t precision, char *Buf, Size_t BufSize)
 {
 	char TempBuffer[32];
-	IntegerToString((i32)(number), TempBuffer, sizeof(TempBuffer));
+	IntegerToString((i32)number, TempBuffer, sizeof(TempBuffer));
 
+	Size_t IntPartLength = ART::StringLength(TempBuffer);
 	char *Ptr = Buf;
-	while(*TempBuffer && (Ptr - Buf) < BufSize - 1) 
+
+	for(Size_t i = 0; i < IntPartLength && (Ptr - Buf) < BufSize - 1; ++i)
 	{
-		*Ptr++ = *TempBuffer++;
+		*Ptr++ = TempBuffer[i];
 	}
 
-	if(Ptr - Buf < BufSize - 1) 
+	if((Ptr - Buf) < BufSize - 1)
 	{
 		*Ptr++ = '.';
 	}
 
-	float FractionPart = number - (i32)(number);
-	if(FractionPart < 0) 
+	float FractionPart = number - (i32)number;
+	if(FractionPart < 0)
 	{
 		FractionPart = -FractionPart;
 	}
 
-	for(Size_t i = 0; i < precision && (Ptr - Buf) < BufSize - 1; ++i) 
+	for(Size_t i = 0; i < precision && (Ptr - Buf) < BufSize - 1; ++i)
 	{
 		FractionPart *= 10;
-		int Digit = (i32)(FractionPart) % 10;
+		int Digit = (int)FractionPart % 10;
 		*Ptr++ = '0' + Digit;
 	}
 	*Ptr = '\0';
