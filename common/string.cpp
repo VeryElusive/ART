@@ -120,13 +120,11 @@ const wchar_t *ART::StringNConcat(const wchar_t *String1, const wchar_t *String2
 	return (const wchar_t *)Out;
 }
 
-char *ART::IntegerToString(i32 number)
+void ART::IntegerToString(i32 number, char *Buf, Size_t BufSize)
 {
-	// enough to store -2147483648 and null terminator
-	char Buffer[12];
 	bool IsNegative = (number < 0);
 	u32 AbsNumber = IsNegative ? -(u32)(number) : number;
-	char *Ptr = Buffer + sizeof(Buffer) - 1;
+	char *Ptr = Buf + BufSize - 1;
 	*Ptr = '\0';
 
 	do 
@@ -143,34 +141,33 @@ char *ART::IntegerToString(i32 number)
 	return Ptr;
 }
 
-char *ART::FloatToString(float number, int precision)
+void ART::FloatToString(float number, Size_t precision, char *Buf, Size_t BufSize)
 {
-	char Buffer[32];
-	int IntegerPart = (int)(number);
-	char *IntString = IntegerToString(IntegerPart);
-	char *Ptr = Buffer;
+	char TempBuffer[32];
+	IntegerToString((i32)(number), TempBuffer, sizeof(TempBuffer));
 
-	while(*IntString)
+	char *Ptr = Buf;
+	while(*TempBuffer && (Ptr - Buf) < BufSize - 1) 
 	{
-		*Ptr++ = *IntString++;
+		*Ptr++ = *TempBuffer++;
 	}
 
-	*Ptr++ = '.';
+	if(Ptr - Buf < BufSize - 1) 
+	{
+		*Ptr++ = '.';
+	}
 
-	float FractionPart = number - IntegerPart;
+	float FractionPart = number - (i32)(number);
 	if(FractionPart < 0) 
 	{
 		FractionPart = -FractionPart;
 	}
 
-	for(int i = 0; i < precision; ++i) 
+	for(Size_t i = 0; i < precision && (Ptr - Buf) < BufSize - 1; ++i) 
 	{
 		FractionPart *= 10;
-		int Digit = (int)(FractionPart) % 10;
+		int Digit = (i32)(FractionPart) % 10;
 		*Ptr++ = '0' + Digit;
 	}
-
 	*Ptr = '\0';
-
-	return Buffer;
 }
