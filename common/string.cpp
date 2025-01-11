@@ -70,17 +70,17 @@ char ART::ToUpper(char Character)
 	return Character;
 }
 
-void ART::ToLower(char *Character)
+void ART::ToLower(char *Characters)
 {
-	for(char *Current = Character; *Current != '\0'; Current++)
+	for(char *Current = Characters; *Current != '\0'; Current++)
 	{
 		*Current = ToLower(*Current);
 	}
 }
 
-void ART::ToUpper(char *Character)
+void ART::ToUpper(char *Characters)
 {
-	for(char *Current = Character; *Current != '\0'; Current++)
+	for(char *Current = Characters; *Current != '\0'; Current++)
 	{
 		*Current = ToUpper(*Current);
 	}

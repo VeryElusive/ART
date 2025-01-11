@@ -1,6 +1,12 @@
 #pragma once
 #include "../common/decl.hpp"
 
+#ifdef _WIN32
+#undef XBUTTON1
+#undef XBUTTON2
+#undef DELETE
+#endif
+
 namespace ART
 {
 	struct KeyState_t
@@ -38,10 +44,8 @@ namespace ART
 		RBUTTON = 0x02,
 		CANCEL = 0x03,
 		MBUTTON = 0x04,
-#if (_WIN32_WINNT >= 0x0500)
 		XBUTTON1 = 0x05,
 		XBUTTON2 = 0x06,
-#endif
 
 		BACK = 0x08,
 		TAB = 0x09,
@@ -174,7 +178,6 @@ namespace ART
 		F23 = 0x86,
 		F24 = 0x87,
 
-#if (_WIN32_WINNT >= 0x0604)
 		NAVIGATION_VIEW = 0x88,
 		NAVIGATION_MENU = 0x89,
 		NAVIGATION_UP = 0x8A,
@@ -183,7 +186,6 @@ namespace ART
 		NAVIGATION_RIGHT = 0x8D,
 		NAVIGATION_ACCEPT = 0x8E,
 		NAVIGATION_CANCEL = 0x8F,
-#endif
 
 		NUMLOCK = 0x90,
 		SCROLL = 0x91,
@@ -202,7 +204,6 @@ namespace ART
 		LMENU = 0xA4,
 		RMENU = 0xA5,
 
-#if (_WIN32_WINNT >= 0x0500)
 		BROWSER_BACK = 0xA6,
 		BROWSER_FORWARD = 0xA7,
 		BROWSER_REFRESH = 0xA8,
@@ -222,7 +223,6 @@ namespace ART
 		LAUNCH_MEDIA_SELECT = 0xB5,
 		LAUNCH_APP1 = 0xB6,
 		LAUNCH_APP2 = 0xB7,
-#endif
 
 		OEM_1 = 0xBA,
 		OEM_PLUS = 0xBB,
@@ -232,7 +232,6 @@ namespace ART
 		OEM_2 = 0xBF,
 		OEM_3 = 0xC0,
 
-#if (_WIN32_WINNT >= 0x0604)
 		GAMEPAD_A = 0xC3,
 		GAMEPAD_B = 0xC4,
 		GAMEPAD_X = 0xC5,
@@ -257,7 +256,6 @@ namespace ART
 		GAMEPAD_RIGHT_THUMBSTICK_DOWN = 0xD8,
 		GAMEPAD_RIGHT_THUMBSTICK_RIGHT = 0xD9,
 		GAMEPAD_RIGHT_THUMBSTICK_LEFT = 0xDA,
-#endif
 
 		OEM_4 = 0xDB,
 		OEM_5 = 0xDC,
@@ -270,15 +268,11 @@ namespace ART
 		ICO_HELP = 0xE3,
 		ICO_00 = 0xE4,
 
-#if (WINVER >= 0x0400)
 		PROCESSKEY = 0xE5,
-#endif
 
 		ICO_CLEAR = 0xE6,
 
-#if (_WIN32_WINNT >= 0x0500)
 		PACKET = 0xE7,
-#endif
 
 		OEM_RESET = 0xE9,
 		OEM_JUMP = 0xEA,

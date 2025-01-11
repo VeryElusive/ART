@@ -30,6 +30,6 @@ namespace ART
 	char ToLower(char Character);
 	char ToUpper(char Character);
 
-	void ToLower(char *Character);
-	void ToUpper(char *Character);
+	void ToLower(char *Characters);
+	void ToUpper(char *Characters);
 }

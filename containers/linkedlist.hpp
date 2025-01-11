@@ -9,30 +9,35 @@ namespace ART
 	class LinkedList
 	{
 	public:
-		struct Node_t 
+		class CNode
 		{
-			T			Data;
-			Node_t		*Next;
+		public:
+			CNode(T Value) : Data(Value), Next(NULL) {}
 
-			Node_t(T Value) : Data(Value), Next(NULL) {}
+			CNode *&GetNext() { return Next; };
+			T &GetData() { return Data; };
+
+		private:
+			T			Data;
+			CNode		*Next;
 		};
 
-		bool Append(T Value) 
+		bool Append(T Value)
 		{
-			Node_t *NewNode = ART::Alloc(sizeof(Node_t));
+			CNode *NewNode = (CNode *)ART::Alloc(sizeof(CNode));
 			if(NewNode == NULL)
 			{
 				return FALSE;
 			}
 
-			*NewNode = Node_t(Value);
-			if(Head == NULL) 
+			*NewNode = CNode(Value);
+			if(Head == NULL)
 			{
 				Head = Tail = NewNode;
 			}
-			else 
+			else
 			{
-				Tail->Next = NewNode;
+				Tail->GetNext() = NewNode;
 				Tail = NewNode;
 			}
 
@@ -43,12 +48,12 @@ namespace ART
 
 		void Clear()
 		{
-			Node_t *Current = Head;
+			CNode *Current = Head;
 
-			while(Current) 
+			while(Current)
 			{
-				Node_t *ToDelete = Current;
-				Current = Current->Next;
+				CNode *ToDelete = Current;
+				Current = Current->GetNext();
 				ART::Free(ToDelete);
 			}
 
@@ -63,7 +68,7 @@ namespace ART
 				return NULL;
 			}
 
-			return Head->Data;
+			return Head->GetData();
 		}
 
 		T *GetTail()
@@ -73,33 +78,33 @@ namespace ART
 				return NULL;
 			}
 
-			return Tail->Data;
+			return Tail->GetData();
 		}
 
-		Node_t *GetHeadNode()
+		CNode *GetHeadNode()
 		{
 			return Head;
 		}
 
-		Node_t *GetTailNode()
+		CNode *GetTailNode()
 		{
-			return Head;
+			return Tail;
 		}
 
-		Node_t *Iterate(Node_t *Node)
+		CNode *Iterate(CNode *Node)
 		{
 			if(Node == NULL)
 			{
 				return Head;
 			}
 
-			return Node->Next;
+			return Node->GetNext();
 		}
 
 	private:
-		Node_t			*Head;
-		Node_t			*Tail;
+		CNode			*Head;
+		CNode			*Tail;
 
 		Size_t			Size;
-	}
+	};
 }
