@@ -46,6 +46,11 @@ namespace ART
 			return TRUE;
 		}
 
+		Size_t Count()
+		{
+			return Size;
+		}
+
 		void Clear()
 		{
 			CNode *Current = Head;
