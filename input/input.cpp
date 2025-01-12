@@ -6,14 +6,14 @@
 
 #endif
 
-ART::KeyState_t			KeyStates[256]		= {};
-i32						Scroll				= 0;
+ART::KeyState_t			KeyStates[256] = {};
+i32						Scroll = 0;
 
-i32						MouseX				= 0;
-i32						MouseY				= 0;
+i32						MouseX = 0;
+i32						MouseY = 0;
 
-i32						MouseDeltaX			= 0;
-i32						MouseDeltaY			= 0;
+i32						MouseDeltaX = 0;
+i32						MouseDeltaY = 0;
 
 void ART::ModerateInput()
 {
@@ -50,7 +50,7 @@ void ART::UpdateInput(u32 Msg, u32 wParam, u32 lParam)
 		MouseDeltaY = MouseY - OldY;
 		break;
 	}
-	case WM_KEYDOWN: 
+	case WM_KEYDOWN:
 	{
 		if(wParam < 256 && wParam >= 0)
 		{
@@ -64,7 +64,7 @@ void ART::UpdateInput(u32 Msg, u32 wParam, u32 lParam)
 
 		break;
 	}
-	case WM_KEYUP: 
+	case WM_KEYUP:
 	{
 		if(wParam < 256 && wParam >= 0)
 		{
@@ -76,34 +76,90 @@ void ART::UpdateInput(u32 Msg, u32 wParam, u32 lParam)
 	}
 	case WM_LBUTTONDOWN:
 	{
-		if(!KeyStates[VK_LBUTTON].Down)
+		if(!KeyStates[ART::LBUTTON].Down)
 		{
-			KeyStates[VK_LBUTTON].Pressed = TRUE;
-			KeyStates[VK_LBUTTON].Toggled = !KeyStates[VK_LBUTTON].Toggled;
+			KeyStates[ART::LBUTTON].Pressed = TRUE;
+			KeyStates[ART::LBUTTON].Toggled = !KeyStates[ART::LBUTTON].Toggled;
 		}
-		KeyStates[VK_LBUTTON].Down = TRUE;
+		KeyStates[ART::LBUTTON].Down = TRUE;
 		break;
 	}
 	case WM_LBUTTONUP:
 	{
-		KeyStates[VK_LBUTTON].Down = FALSE;
-		KeyStates[VK_LBUTTON].Released = TRUE;
+		KeyStates[ART::LBUTTON].Down = FALSE;
+		KeyStates[ART::LBUTTON].Released = TRUE;
 		break;
 	}
 	case WM_RBUTTONDOWN:
 	{
-		if(!KeyStates[VK_RBUTTON].Down)
+		if(!KeyStates[ART::RBUTTON].Down)
 		{
-			KeyStates[VK_RBUTTON].Pressed = TRUE;
-			KeyStates[VK_RBUTTON].Toggled = !KeyStates[VK_RBUTTON].Toggled;
+			KeyStates[ART::RBUTTON].Pressed = TRUE;
+			KeyStates[ART::RBUTTON].Toggled = !KeyStates[ART::RBUTTON].Toggled;
 		}
-		KeyStates[VK_RBUTTON].Down = TRUE;
+		KeyStates[ART::RBUTTON].Down = TRUE;
 		break;
 	}
 	case WM_RBUTTONUP:
 	{
-		KeyStates[VK_RBUTTON].Down = FALSE;
-		KeyStates[VK_RBUTTON].Released = TRUE;
+		KeyStates[ART::RBUTTON].Down = FALSE;
+		KeyStates[ART::RBUTTON].Released = TRUE;
+		break;
+	}
+	case WM_MBUTTONDOWN:
+	{
+		if(!KeyStates[ART::MBUTTON].Down)
+		{
+			KeyStates[ART::MBUTTON].Pressed = TRUE;
+			KeyStates[ART::MBUTTON].Toggled = !KeyStates[ART::MBUTTON].Toggled;
+		}
+		KeyStates[ART::MBUTTON].Down = TRUE;
+		break;
+	}
+	case WM_MBUTTONUP:
+	{
+		KeyStates[ART::MBUTTON].Down = FALSE;
+		KeyStates[ART::MBUTTON].Released = TRUE;
+		break;
+	}
+#undef XBUTTON1
+#undef XBUTTON2
+	case WM_XBUTTONDOWN:
+	{
+		WORD button = GET_XBUTTON_WPARAM(wParam);
+		if(button == 0x0001/*XBUTTON1*/)
+		{
+			if(!KeyStates[ART::XBUTTON1].Down)
+			{
+				KeyStates[ART::XBUTTON1].Pressed = TRUE;
+				KeyStates[ART::XBUTTON1].Toggled = !KeyStates[ART::XBUTTON1].Toggled;
+			}
+			KeyStates[ART::XBUTTON1].Down = TRUE;
+		}
+		else if(button == 0x0002/*XBUTTON2*/)
+		{
+			if(!KeyStates[ART::XBUTTON2].Down)
+			{
+				KeyStates[ART::XBUTTON2].Pressed = TRUE;
+				KeyStates[ART::XBUTTON2].Toggled = !KeyStates[ART::XBUTTON2].Toggled;
+			}
+			KeyStates[ART::XBUTTON2].Down = TRUE;
+		}
+		break;
+	}
+	case WM_XBUTTONUP:
+	{
+		WORD button = GET_XBUTTON_WPARAM(wParam);
+		if(button == 0x0001/*XBUTTON1*/)
+		{
+			KeyStates[ART::XBUTTON1].Down = FALSE;
+			KeyStates[ART::XBUTTON1].Released = TRUE;
+		}
+		else if(button == 0x0002/*XBUTTON2*/)
+		{
+			KeyStates[ART::XBUTTON2].Down = FALSE;
+			KeyStates[ART::XBUTTON2].Released = TRUE;
+		}
 		break;
 	}
 	case WM_MOUSEWHEEL:
