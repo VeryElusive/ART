@@ -22,6 +22,8 @@ namespace ART
 			CNode		*Next;
 		};
 
+		LinkedList() { Size = 0; Head = Tail = NULL; }
+
 		bool Append(T Value)
 		{
 			CNode *NewNode = (CNode *)ART::Alloc(sizeof(CNode));
