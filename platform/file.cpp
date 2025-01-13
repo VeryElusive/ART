@@ -69,6 +69,67 @@ bool ART::CFile::Open(const char *FilePath, EOpenMode Mode)
 #endif
 }
 
+bool ART::CFile::Open(const wchar_t *FilePath, EOpenMode Mode)
+{
+#ifdef _WIN32
+	DWORD Access = 0;
+	DWORD Creation = 0;
+
+	switch(Mode)
+	{
+	case EOpenMode::READ:
+		Access = GENERIC_READ;
+		Creation = OPEN_EXISTING;
+		break;
+	case EOpenMode::WRITE:
+		Access = GENERIC_WRITE;
+		Creation = CREATE_ALWAYS;
+		break;
+	case EOpenMode::WRITE_APPEND:
+		Access = FILE_APPEND_DATA;
+		Creation = OPEN_ALWAYS;
+		break;
+	case EOpenMode::READ_WRITE:
+		Access = GENERIC_READ | GENERIC_WRITE;
+		Creation = OPEN_ALWAYS;
+		break;
+	}
+
+	File = CreateFileW(
+		FilePath,
+		Access,
+		0,
+		NULL,
+		Creation,
+		FILE_ATTRIBUTE_NORMAL,
+		NULL
+	);
+
+	return File != (void *)INVALID_HANDLE_VALUE;
+#else
+	int Flags = 0;
+
+	switch(Mode)
+	{
+	case EOpenMode::READ:
+		Flags = O_RDONLY;
+		break;
+	case EOpenMode::WRITE:
+		Flags = O_WRONLY | O_CREAT | O_TRUNC;
+		break;
+	case EOpenMode::WRITE_APPEND:
+		Flags = O_WRONLY | O_CREAT | O_APPEND;
+		break;
+	case EOpenMode::READ_WRITE:
+		Flags = O_RDWR | O_CREAT;
+		break;
+	}
+
+	File = open(FilePath, Flags, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+	return File != -1;
+#endif
+}
+
 void ART::CFile::Close()
 {
 #ifdef _WIN32
@@ -120,7 +181,7 @@ Size_t ART::CFile::GetFileSize()
 #ifdef _WIN32
 	if(File == (void *)INVALID_HANDLE_VALUE)
 	{
-		return -1;
+		return 0;
 	}
 
 	LARGE_INTEGER size;

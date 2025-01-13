@@ -21,6 +21,7 @@ namespace ART
 		}
 
 		bool Open(const char *FilePath, EOpenMode Mode);
+		bool Open(const wchar_t *FilePath, EOpenMode Mode);
 
 		void Close();
 

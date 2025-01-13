@@ -48,6 +48,46 @@ namespace ART
 			return TRUE;
 		}
 
+		bool Remove(CNode *Node)
+		{
+			if(Head == NULL || Node == NULL)
+			{
+				return FALSE;
+			}
+
+			if(Node == Head)
+			{
+				Head = Head->GetNext();
+				if(Head == NULL)
+				{
+					Tail = NULL;
+				}
+			}
+			else
+			{
+				CNode *Prev = Head;
+				while(Prev->GetNext() != NULL && Prev->GetNext() != Node)
+				{
+					Prev = Prev->GetNext();
+				}
+
+				if(Prev->GetNext() == NULL)
+				{
+					return FALSE;
+				}
+
+				Prev->GetNext() = Node->GetNext();
+				if(Node == Tail)
+				{
+					Tail = Prev;
+				}
+			}
+
+			ART::Free(Node);
+			--Size;
+			return TRUE;
+		}
+
 		Size_t Count()
 		{
 			return Size;
@@ -88,17 +128,17 @@ namespace ART
 			return Tail->GetData();
 		}
 
-		CNode *GetHeadNode()
+		CNode *&GetHeadNode()
 		{
 			return Head;
 		}
 
-		CNode *GetTailNode()
+		CNode *&GetTailNode()
 		{
 			return Tail;
 		}
 
-		CNode *Iterate(CNode *Node)
+		CNode *&Iterate(CNode *Node)
 		{
 			if(Node == NULL)
 			{
