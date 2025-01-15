@@ -60,6 +60,11 @@ namespace ART
 			return Table.Count();
 		}
 
+		void Destroy(bool FreeMemory = TRUE)
+		{
+			Table.Destroy(FreeMemory);
+		}
+
 		T *Get(Size_t Key)
 		{
 			if(Table.Count() == 0)
