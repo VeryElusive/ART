@@ -65,8 +65,18 @@ namespace ART
 		return Value;
 	}
 
+	inline float DegreeToRadians(float Degrees)
+	{
+		return Degrees * PI / 180.f;
+	}
+
+	inline float RadiansToDegree(float Radians)
+	{
+		return Radians * (180.0f / PI);
+	}
+
 	template <typename T = float>
-	T Interpolate(float Factor, T X, T Y)
+	inline T Interpolate(float Factor, T X, T Y)
 	{
 		if(X == Y)
 		{
@@ -211,6 +221,63 @@ namespace ART
 		_mm_store_ss(
 			&Out,
 			_mm_round_ss(In, In, _MM_FROUND_TO_NEAREST_INT | _MM_FROUND_NO_EXC)
+		);
+
+		return Out;
+	}
+
+	inline float Tan(float Value)
+	{
+		float Out;
+		_mm_store_ss(
+			&Out,
+			_mm_tan_ps(_mm_load1_ps(&Value))
+		);
+
+		return Out;
+	}
+
+	inline float Atan(float Value)
+	{
+		float Out;
+		_mm_store_ss(
+			&Out,
+			_mm_atan_ps(_mm_load1_ps(&Value))
+		);
+
+		return Out;
+	}
+
+	inline float Atan2(float Value, float Dividor)
+	{
+		float Out;
+		_mm_store_ss(
+			&Out,
+			_mm_atan2_ps(_mm_load1_ps(&Value), _mm_load1_ps(&Dividor))
+		);
+
+		return Out;
+	}
+
+	
+	inline float Tanh(float Value)
+	{
+		float Out;
+		_mm_store_ss(
+			&Out,
+			_mm_tanh_ps(_mm_load1_ps(&Value))
+		);
+
+		return Out;
+	}
+
+	
+	inline float Atanh(float Value)
+	{
+		float Out;
+		_mm_store_ss(
+			&Out,
+			_mm_atanh_ps(_mm_load1_ps(&Value))
 		);
 
 		return Out;
