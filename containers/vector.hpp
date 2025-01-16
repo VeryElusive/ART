@@ -39,7 +39,10 @@ namespace ART
 			if(FreeMemory == TRUE)
 			{
 				ReservedCount = 0;
-				ART::Free((void *)Data);
+				if(Data)
+				{
+					ART::Free((void *)Data);
+				}
 			}
 		}
 
