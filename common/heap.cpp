@@ -46,6 +46,10 @@ namespace ART
 	/// <returns>Address of new heap allocation</returns>
 	void *Realloc(void *Address, Size_t Size)
 	{
+		if(Address == NULL)
+		{
+			return Alloc(Size);
+		}
 #ifdef CUSTOM_MEM_CALLBACK
 		if(HeapReallocCallback)
 		{

@@ -10,9 +10,7 @@ namespace ART
 	public:
 		T *Insert(Size_t Key, T Value)
 		{
-			Entry_t Entry;
-			Entry.Key = Key;
-			Entry.Value = Value;
+			Entry_t Entry{Key, Value};
 
 			Entry_t *EntryPTR;
 
