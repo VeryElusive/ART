@@ -56,6 +56,17 @@ namespace ART
 			return &Data[Index];
 		}
 
+		// just for quick iteration.
+		T *begin() 
+		{
+			return Data;
+		}
+
+		T *end() 
+		{
+			return (T *)((Ptr_t)Data + (Ptr_t)(ElementCount * sizeof(T)));
+		}
+
 		/// <summary>
 		/// Resizes the data to a particular size.
 		/// </summary>

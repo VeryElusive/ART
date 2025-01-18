@@ -32,6 +32,16 @@ namespace ART
 			return NULL;
 		}
 
+		T *begin()
+		{
+			return Table.begin();
+		}
+
+		T *end()
+		{
+			return Table.end();
+		}
+
 		void Resize(Size_t Size)
 		{
 			Table.Resize(Size);
