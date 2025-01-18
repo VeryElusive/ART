@@ -129,7 +129,7 @@ namespace ART
 				}
 			}
 
-			if(Index == ElementCount - 1)
+			if(Index == ElementCount)
 			{
 				return PushBack(NewElement);
 			}
@@ -138,7 +138,7 @@ namespace ART
 			(
 				&Data[Index + 1],
 				&Data[Index],
-				(ElementCount - Index - 1) * sizeof(T)
+				(ElementCount - Index) * sizeof(T)
 			);
 
 			ART::Memcpy
@@ -152,6 +152,7 @@ namespace ART
 
 			return &Data[Index];
 		}
+
 
 		T *Insert(Size_t Index, T NewElement)
 		{

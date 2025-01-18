@@ -32,6 +32,11 @@ namespace ART
 			return NULL;
 		}
 
+		void Resize(Size_t Size)
+		{
+			Table.Resize(Size);
+		}
+
 		void Remove(Size_t Key)
 		{
 			if(Table.Count() == 0)
