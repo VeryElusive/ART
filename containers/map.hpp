@@ -7,6 +7,36 @@ namespace ART
 	template <typename T>
 	class OrderedMap
 	{
+	private:
+		struct Entry_t
+		{
+			u64 Key;
+			T Value;
+		};
+
+		class CValueIterator
+		{
+		private:
+			Entry_t *Current;
+		public:
+			CValueIterator(Entry_t *entry) : Current(entry) {}
+
+			T &operator*()
+			{
+				return Current->Value;
+			}
+
+			CValueIterator &operator++()
+			{
+				++Current;
+				return *this;
+			}
+
+			bool operator!=(const CValueIterator &other) const {
+				return Current != other.Current;
+			}
+		};
+
 	public:
 		T *Insert(Size_t Key, T Value)
 		{
@@ -30,16 +60,6 @@ namespace ART
 			}
 
 			return NULL;
-		}
-
-		T *begin()
-		{
-			return Table.begin();
-		}
-
-		T *end()
-		{
-			return Table.end();
 		}
 
 		void Resize(Size_t Size)
@@ -78,6 +98,17 @@ namespace ART
 			Table.Destroy(FreeMemory);
 		}
 
+		T *GetAtIndex(Size_t Index)
+		{
+			Entry_t *Entry = Table.Get(Index);
+			if(Entry == NULL)
+			{
+				return NULL;
+			}
+
+			return &Entry->Value;
+		}
+
 		T *Get(Size_t Key)
 		{
 			if(Table.Count() == 0)
@@ -94,6 +125,26 @@ namespace ART
 			}
 
 			return NULL;
+		}
+
+		void Lock()
+		{
+			Table.Lock();
+		}
+
+		void Unlock()
+		{
+			Table.Unlock();
+		}
+
+		CValueIterator begin()
+		{
+			return CValueIterator(Table.begin());
+		}
+
+		CValueIterator end()
+		{
+			return CValueIterator(Table.end());
 		}
 
 	private:
@@ -122,12 +173,6 @@ namespace ART
 
 			return Mid;
 		}
-
-		struct Entry_t
-		{
-			u64 Key;
-			T Value;
-		};
 
 		ART::Vector<Entry_t> Table;
 	};
