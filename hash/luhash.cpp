@@ -1,87 +1,60 @@
 #include "luhash.hpp"
 
+#include "../common/string.hpp"
+
 #ifdef _MSC_VER
 #include <intrin.h>
 #elif defined(__GNUC__) || defined(__clang__)
 #include <immintrin.h>
 #endif
 
-consteval u32 ART::LUHash::Hash2Const(const void *Data, u32 Seed, Size_t Length)
+u32 ART::LUHash::Hash2(const char *Data, u32 Seed, Size_t Length)
 {
-	const u8 *_Data = (u8 *)(Data);
-	u32         Hash = 'LUTL' ^ Seed;
+	if(Length == 0)
+	{
+		Length = ART::StringLength(Data);
+	}
+
+	auto CRC32Update = [](u32 crc, u8 data) constexpr -> u32
+		{
+			constexpr u32 polynomial = 0x82F63B78U;  // CRC-32C polynomial
+			crc ^= data;
+			for(int i = 0; i < 8; ++i)
+			{
+				crc = (crc >> 1) ^ ((crc & 1) ? polynomial : 0);
+			}
+			return crc;
+		};
+
+	u32 Hash = 'LUTL' ^ Seed;
 
 	for(Size_t Index = 0; Length != 0;)
 	{
-		/*if(Length >= 8)
+		if(Length >= 4)
 		{
-			Hash = _mm_crc32_u64(Hash, *(libutil_u64 *)(&_Data[Index]));
-
-			Index += 8;
-			Length -= 8;
-		}
-		else */if(Length >= 4)
-		{
-			Hash = _mm_crc32_u32(Hash, *(u32 *)(&_Data[Index]));
-
+			u32 chunk = (Data[Index + 3] << 24) | (Data[Index + 2] << 16) |
+				(Data[Index + 1] << 8) | Data[Index];
+			Hash = CRC32Update(Hash, chunk & 0xFF);
+			Hash = CRC32Update(Hash, (chunk >> 8) & 0xFF);
+			Hash = CRC32Update(Hash, (chunk >> 16) & 0xFF);
+			Hash = CRC32Update(Hash, (chunk >> 24) & 0xFF);
 			Index += 4;
 			Length -= 4;
 		}
 		else if(Length >= 2)
 		{
-			Hash = _mm_crc32_u16(Hash, *(u16 *)(&_Data[Index]));
-
+			u16 chunk = (Data[Index + 1] << 8) | Data[Index];
+			Hash = CRC32Update(Hash, chunk & 0xFF);
+			Hash = CRC32Update(Hash, (chunk >> 8) & 0xFF);
 			Index += 2;
 			Length -= 2;
 		}
 		else
 		{
-			Hash = _mm_crc32_u8(Hash, _Data[Index]);
-
+			Hash = CRC32Update(Hash, Data[Index]);
 			++Index;
 			--Length;
 		}
 	}
-
-	return Hash ^ 'LUTL';
-}
-
-u32 ART::LUHash::Hash2(const void *Data, u32 Seed, Size_t Length)
-{
-	const u8 *_Data = (u8 *)(Data);
-	u32         Hash = 'LUTL' ^ Seed;
-
-	for(Size_t Index = 0; Length != 0;)
-	{
-		/*if(Length >= 8)
-		{
-			Hash = _mm_crc32_u64(Hash, *(libutil_u64 *)(&_Data[Index]));
-
-			Index += 8;
-			Length -= 8;
-		}
-		else */if(Length >= 4)
-		{
-			Hash = _mm_crc32_u32(Hash, *(u32 *)(&_Data[Index]));
-
-			Index += 4;
-			Length -= 4;
-		}
-		else if(Length >= 2)
-		{
-			Hash = _mm_crc32_u16(Hash, *(u16 *)(&_Data[Index]));
-
-			Index += 2;
-			Length -= 2;
-		}
-		else
-		{
-			Hash = _mm_crc32_u8(Hash, _Data[Index]);
-
-			++Index;
-			--Length;
-		}
-	}
-
 	return Hash ^ 'LUTL';
 }
