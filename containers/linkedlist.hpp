@@ -12,14 +12,17 @@ namespace ART
 		class CNode
 		{
 		public:
-			CNode(T Value) : Data(Value), Next(NULL) {}
+			CNode(T Value) : Next(NULL)
+			{
+				ART::Memcpy(&Data, &Value, sizeof(T));
+			}
 
 			CNode *&GetNext() { return Next; };
 			T &GetData() { return Data; };
 
 		private:
 			T			Data;
-			CNode		*Next;
+			CNode *Next;
 		};
 
 		LinkedList() { Size = 0; Head = Tail = NULL; }
@@ -32,7 +35,9 @@ namespace ART
 				return FALSE;
 			}
 
-			*NewNode = CNode(Value);
+			ART::Memcpy(&NewNode->GetData(), &Value, sizeof(T));
+			NewNode->GetNext() = NULL;
+
 			if(Head == NULL)
 			{
 				Head = Tail = NewNode;
@@ -149,8 +154,8 @@ namespace ART
 		}
 
 	private:
-		CNode			*Head;
-		CNode			*Tail;
+		CNode *Head;
+		CNode *Tail;
 
 		Size_t			Size;
 	};
