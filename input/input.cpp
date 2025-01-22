@@ -183,6 +183,11 @@ i32 ART::GetScrollDistance()
 
 ART::KeyState_t ART::GetKeyState(u32 KeyCode)
 {
+	if(KeyCode > 255 || KeyCode < 0)
+	{
+		return {};
+	}
+
 	return KeyStates[KeyCode];
 }
 
