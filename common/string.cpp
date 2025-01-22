@@ -30,6 +30,51 @@ Size_t ART::StringNLength(const wchar_t *String, Size_t MaxLength)
 	return Length;
 }
 
+const char *ART::StringFind(const char *String, const char *SubString)
+{
+	Size_t SubStringLen = ART::StringLength(SubString);
+	return StringNFind(String, SubString, SubStringLen);
+}
+
+const char *ART::StringNFind(const char *String, const char *SubString, Size_t SubStringLen)
+{
+	if(!String || !SubString)
+	{
+		return NULL;
+	}
+
+	if(SubStringLen == 0)
+	{
+		return String;
+	}
+
+	Size_t StringLen = ART::StringLength(String);
+	if(StringLen < SubStringLen)
+	{
+		return NULL;
+	}
+
+	for(int i = 0; i <= StringLen - SubStringLen; i++)
+	{
+		bool Found = TRUE;
+
+		for(int j = 0; j < SubStringLen; j++)
+		{
+			if(String[i + j] != SubString[j])
+			{
+				Found = FALSE;
+				break;
+			}
+		}
+
+		if(Found)
+		{
+			return String + i;
+		}
+	}
+
+	return NULL;
+}
 
 bool ART::StringCompare(const char *String, const char *String2)
 {

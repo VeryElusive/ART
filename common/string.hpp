@@ -16,6 +16,9 @@ namespace ART
 	bool StringNCompare(const char *String, const char *String2, Size_t StringLength);
 	bool StringNCompare(const wchar_t *String, const wchar_t *String2, Size_t StringLength);
 
+	const char *StringFind(const char *String, const char *SubString);
+	const char *StringNFind(const char *String, const char *SubString, Size_t SubStringLen);
+
 	// remember to free after use!
 	const char *StringConcat(const char *String1, const char *String2);
 	const wchar_t *StringConcat(const wchar_t *String1, const wchar_t *String2);
