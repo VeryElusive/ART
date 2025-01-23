@@ -6,46 +6,46 @@ namespace ART
 {
 	struct Quaternion_t
 	{
-		float x, y, z, w;
+		float X, Y, Z, W;
 
 		Quaternion_t(float _x, float _y, float _z, float _w) :
-			w(_w), x(_x), y(_y), z(_z) {}
+			W(_w), X(_x), Y(_y), Z(_z) {}
 
 		Quaternion_t(Vec3_t vec) :
-			w(0.f), x(vec.x), y(vec.y), z(vec.z) {}
+			W(0.f), X(vec.X), Y(vec.Y), Z(vec.Z) {}
 
 		Vec3_t ToVector() const
 		{
-			return Vec3_t(x, y, z);
+			return Vec3_t(X, Y, Z);
 		}
 
 		Quaternion_t Conjugate() const
 		{
-			return Quaternion_t(-x, -y, -z, w);
+			return Quaternion_t(-X, -Y, -Z, W);
 		}
 
 		Quaternion_t operator*(const Quaternion_t &rhs) const
 		{
 			return Quaternion_t(
-				w * rhs.x + x * rhs.w + y * rhs.z - z * rhs.y,
-				w * rhs.y - x * rhs.z + y * rhs.w + z * rhs.x,
-				w * rhs.z + x * rhs.y - y * rhs.x + z * rhs.w,
-				w * rhs.w - x * rhs.x - y * rhs.y - z * rhs.z
+				W * rhs.X + X * rhs.W + Y * rhs.Z - Z * rhs.Y,
+				W * rhs.Y - X * rhs.Z + Y * rhs.W + Z * rhs.X,
+				W * rhs.Z + X * rhs.Y - Y * rhs.X + Z * rhs.W,
+				W * rhs.W - X * rhs.X - Y * rhs.Y - Z * rhs.Z
 			);
 		}
 
 		Vec3_t Rotate(const Vec3_t v) const
 		{
-			const float tx = 2.f * (y * v.z - z * v.y);
-			const float ty = 2.f * (z * v.x - x * v.z);
-			const float tz = 2.f * (x * v.y - y * v.x);
+			const float tx = 2.f * (Y * v.Z - Z * v.Y);
+			const float ty = 2.f * (Z * v.X - X * v.Z);
+			const float tz = 2.f * (X * v.Y - Y * v.X);
 
 			Vec3_t ret;
 
-			// v + w t + q x t
-			ret.x = v.x + w * tx + y * tz - z * ty;
-			ret.y = v.y + w * ty + z * tx - x * tz;
-			ret.z = v.z + w * tz + x * ty - y * tx;
+			// v + w t + q X t
+			ret.X = v.X + W * tx + Y * tz - Z * ty;
+			ret.Y = v.Y + W * ty + Z * tx - X * tz;
+			ret.Z = v.Z + W * tz + X * ty - Y * tx;
 
 			return ret;
 		}
