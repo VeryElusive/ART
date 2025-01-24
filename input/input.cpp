@@ -15,6 +15,9 @@ i32						MouseY = 0;
 i32						MouseDeltaX = 0;
 i32						MouseDeltaY = 0;
 
+i32						OldMouseX = 0;
+i32						OldMouseY = 0;
+
 void ART::ModerateInput()
 {
 #ifdef _WIN32
@@ -46,8 +49,8 @@ void ART::UpdateInput(u32 Msg, u32 wParam, u32 lParam)
 		MouseX = LOWORD(lParam);
 		MouseY = HIWORD(lParam);
 
-		MouseDeltaX = MouseX - OldX;
-		MouseDeltaY = MouseY - OldY;
+		MouseDeltaX += MouseX - OldX;
+		MouseDeltaY += MouseY - OldY;
 		break;
 	}
 	case WM_KEYDOWN:
