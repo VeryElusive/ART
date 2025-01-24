@@ -15,9 +15,6 @@ i32						MouseY = 0;
 i32						MouseDeltaX = 0;
 i32						MouseDeltaY = 0;
 
-i32						OldMouseX = 0;
-i32						OldMouseY = 0;
-
 void ART::ModerateInput()
 {
 #ifdef _WIN32
