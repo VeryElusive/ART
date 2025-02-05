@@ -282,4 +282,39 @@ namespace ART
 
 		return Out;
 	}
+
+	/* Combinations */
+	inline float AngleDifference(float Dst, float Src)
+	{
+		float Delta = Mod(Dst - Src, 360.f);
+
+		if(Dst > Src && Delta >= 180.f)
+		{
+			Delta -= 360.f;
+		}
+		else if(Delta <= -180.f)
+		{
+			Delta += 360.f;
+		}
+
+		return Delta;
+	}
+
+	inline float NormalizeYaw(float Angle)
+	{
+		const float Revolutions = Round(AbsF(Angle / 360.f));
+		if(Angle > 180.f || Angle < -180.f)
+		{
+			if(Angle < 0.f)
+			{
+				Angle = (Angle + 360.f * Revolutions);
+			}
+			else
+			{
+				Angle = (Angle - 360.f * Revolutions);
+			}
+			return Angle;
+		}
+		return Angle;
+	}
 }
