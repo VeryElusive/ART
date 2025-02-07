@@ -124,6 +124,17 @@ namespace ART
 		return Out;
 	}
 
+	inline float Asin(float Value)
+	{
+		float Out;
+		_mm_store_ss(
+			&Out,
+			_mm_asin_ps(_mm_load1_ps(&Value))
+		);
+
+		return Out;
+	}
+
 	inline float Acos(float Value)
 	{
 		float Out;
