@@ -42,6 +42,7 @@ namespace ART
 				if(Data)
 				{
 					ART::Free((void *)Data);
+					Data = NULL;
 				}
 			}
 		}
