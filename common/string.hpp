@@ -19,6 +19,15 @@ namespace ART
 	const char *StringFind(const char *String, const char *SubString);
 	const char *StringNFind(const char *String, const char *SubString, Size_t SubStringLen);
 
+	const wchar_t *StringFind(const wchar_t *String, const wchar_t *SubString);
+	const wchar_t *StringNFind(const wchar_t *String, const wchar_t *SubString, Size_t SubStringLen);
+
+	const char *StringFindCI(const char *String, const char *SubString);
+	const char *StringNFindCI(const char *String, const char *SubString, Size_t SubStringLen);
+
+	const wchar_t *StringFindCI(const wchar_t *String, const wchar_t *SubString);
+	const wchar_t *StringNFindCI(const wchar_t *String, const wchar_t *SubString, Size_t SubStringLen);
+
 	// remember to free after use!
 	const char *StringConcat(const char *String1, const char *String2);
 	const wchar_t *StringConcat(const wchar_t *String1, const wchar_t *String2);

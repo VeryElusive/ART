@@ -76,6 +76,144 @@ const char *ART::StringNFind(const char *String, const char *SubString, Size_t S
 	return NULL;
 }
 
+const wchar_t *ART::StringFind(const wchar_t *String, const wchar_t *SubString)
+{
+	Size_t SubStringLen = ART::StringLength(SubString);
+	return StringNFind(String, SubString, SubStringLen);
+}
+
+const wchar_t *ART::StringNFind(const wchar_t *String, const wchar_t *SubString, Size_t SubStringLen)
+{
+	if(!String || !SubString)
+	{
+		return NULL;
+	}
+
+	if(SubStringLen == 0)
+	{
+		return String;
+	}
+
+	Size_t StringLen = ART::StringLength(String);
+	if(StringLen < SubStringLen)
+	{
+		return NULL;
+	}
+
+	for(int i = 0; i <= StringLen - SubStringLen; i++)
+	{
+		bool Found = TRUE;
+
+		for(int j = 0; j < SubStringLen; j++)
+		{
+			if(String[i + j] != SubString[j])
+			{
+				Found = FALSE;
+				break;
+			}
+		}
+
+		if(Found)
+		{
+			return String + i;
+		}
+	}
+
+	return NULL;
+}
+
+const char *ART::StringFindCI(const char *String, const char *SubString)
+{
+	Size_t SubStringLen = ART::StringLength(SubString);
+	return StringNFindCI(String, SubString, SubStringLen);
+}
+
+const char *ART::StringNFindCI(const char *String, const char *SubString, Size_t SubStringLen)
+{
+	if(!String || !SubString)
+	{
+		return NULL;
+	}
+
+	if(SubStringLen == 0)
+	{
+		return String;
+	}
+
+	Size_t StringLen = ART::StringLength(String);
+	if(StringLen < SubStringLen)
+	{
+		return NULL;
+	}
+
+	for(int i = 0; i <= StringLen - SubStringLen; i++)
+	{
+		bool Found = TRUE;
+
+		for(int j = 0; j < SubStringLen; j++)
+		{
+			if(ART::ToLower(String[i + j]) != ART::ToLower(SubString[j]))
+			{
+				Found = FALSE;
+				break;
+			}
+		}
+
+		if(Found)
+		{
+			return String + i;
+		}
+	}
+
+	return NULL;
+}
+
+const wchar_t *ART::StringFindCI(const wchar_t *String, const wchar_t *SubString)
+{
+	Size_t SubStringLen = ART::StringLength(SubString);
+	return StringNFindCI(String, SubString, SubStringLen);
+}
+
+const wchar_t *ART::StringNFindCI(const wchar_t *String, const wchar_t *SubString, Size_t SubStringLen)
+{
+	if(!String || !SubString)
+	{
+		return NULL;
+	}
+
+	if(SubStringLen == 0)
+	{
+		return String;
+	}
+
+	Size_t StringLen = ART::StringLength(String);
+	if(StringLen < SubStringLen)
+	{
+		return NULL;
+	}
+
+	for(int i = 0; i <= StringLen - SubStringLen; i++)
+	{
+		bool Found = TRUE;
+
+		for(int j = 0; j < SubStringLen; j++)
+		{
+			if(ART::ToLower(String[i + j]) != ART::ToLower(SubString[j]))
+			{
+				Found = FALSE;
+				break;
+			}
+		}
+
+		if(Found)
+		{
+			return String + i;
+		}
+	}
+
+	return NULL;
+}
+
 bool ART::StringCompare(const char *String, const char *String2)
 {
 	return StringNCompare(String, String2, StringLength(String));
