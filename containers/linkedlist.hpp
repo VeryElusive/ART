@@ -22,7 +22,7 @@ namespace ART
 
 		private:
 			T			Data;
-			CNode *Next;
+			CNode		*Next;
 		};
 
 		LinkedList() { Size = 0; Head = Tail = NULL; }

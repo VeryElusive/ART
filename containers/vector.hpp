@@ -36,7 +36,7 @@ namespace ART
 		{
 			ElementCount = 0;
 
-			if(FreeMemory == TRUE)
+			if(FreeMemory == TRUE && ReservedCount != 0)
 			{
 				ReservedCount = 0;
 				if(Data)
