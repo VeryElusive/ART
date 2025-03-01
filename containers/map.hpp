@@ -119,7 +119,7 @@ namespace ART
 			Size_t Index = Partition(0, Table.Count() - 1, Key);
 
 			Entry_t *Entry = Table.Get(Index);
-			if(Entry->Key == Key)
+			if(Entry && Entry->Key == Key)
 			{
 				return &Entry->Value;
 			}
@@ -150,28 +150,26 @@ namespace ART
 	private:
 		Size_t Partition(Size_t Low, Size_t High, Size_t Key)
 		{
-			Size_t Mid = Low + (High - Low) / 2;
+			if(Low > High)
+			{
+				return Low;
+			}
 
-			if(Table.Get(Mid)->Key == Key)
+			Size_t Mid = Low + (High - Low) / 2;
+			Size_t MidKey = Table.Get(Mid)->Key;
+
+			if(MidKey == Key)
 			{
 				return Mid;
 			}
-			else if(Table.Get(Mid)->Key > Key)
+			else if(MidKey < Key)
 			{
-				if(Low < Mid)
-				{
-					return Partition(Low, Mid - 1, Key);
-				}
+				return Partition(Mid + 1, High, Key);
 			}
 			else
 			{
-				if(Mid < High)
-				{
-					return Partition(Mid + 1, High, Key);
-				}
+				return Partition(Low, Mid - 1, Key);
 			}
-
-			return Mid;
 		}
 
 		ART::Vector<Entry_t> Table;
