@@ -51,6 +51,12 @@ namespace ART
 			return ret;
 		}
 
+		float GetBrightness() const
+		{
+			// Luminance formula: 0.299*R + 0.587*G + 0.114*B
+			return (0.299f * (float)r + 0.587f * (float)g + 0.114f * (float)b) / 255.f;
+		}
+
 		Color_t &operator=(u32 color)
 		{
 			r = (color >> 24) & 0xFF;
