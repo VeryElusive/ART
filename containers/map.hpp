@@ -148,28 +148,60 @@ namespace ART
 		}
 
 	private:
-		Size_t Partition(Size_t Low, Size_t High, Size_t Key)
+		Size_t Partition(Size_t Low, Size_t High, Size_t Key) 
 		{
-			if(Low > High)
+			while(Low <= High) 
 			{
-				return Low;
+				Size_t Mid = Low + (High - Low) / 2;
+				Entry_t *MidEntry = Table.Get(Mid);
+				if(!MidEntry) 
+				{
+					bool FoundValid = false;
+					for(Size_t i = Mid; i >= Low; --i) 
+					{
+						if(Table.Get(i)) 
+						{
+							Mid = i;
+							FoundValid = true;
+							break;
+						}
+					}
+					if(!FoundValid)
+					{
+						for(Size_t i = Mid + 1; i <= High; ++i) 
+						{
+							if(Table.Get(i)) 
+							{
+								Mid = i;
+								FoundValid = true;
+								break;
+							}
+						}
+					}
+					if(!FoundValid)
+					{
+						return Low;
+					}
+
+					MidEntry = Table.Get(Mid);
+				}
+
+				Size_t MidKey = MidEntry->Key;
+				if(MidKey == Key)
+				{
+					return Mid;
+				}
+				else if(MidKey < Key)
+				{
+					Low = Mid + 1;
+				}
+				else 
+				{
+					High = Mid - 1;
+				}
 			}
 
-			Size_t Mid = Low + (High - Low) / 2;
-			Size_t MidKey = Table.Get(Mid)->Key;
-
-			if(MidKey == Key)
-			{
-				return Mid;
-			}
-			else if(MidKey < Key)
-			{
-				return Partition(Mid + 1, High, Key);
-			}
-			else
-			{
-				return Partition(Low, Mid - 1, Key);
-			}
+			return Low;
 		}
 
 		ART::Vector<Entry_t> Table;
