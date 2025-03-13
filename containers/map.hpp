@@ -41,7 +41,6 @@ namespace ART
 		T *Insert(Size_t Key, T Value)
 		{
 			Entry_t Entry{Key, Value};
-
 			Entry_t *EntryPTR;
 
 			if(Table.Count() == 0)
@@ -50,16 +49,11 @@ namespace ART
 			}
 			else
 			{
-				Size_t InsertIndex = Partition(0, Table.Count() - 1, Key);
+				Size_t InsertIndex = GetIndexForKey(Key);
 				EntryPTR = Table.Insert(InsertIndex, Entry);
 			}
 
-			if(EntryPTR != NULL)
-			{
-				return &EntryPTR->Value;
-			}
-
-			return NULL;
+			return EntryPTR ? &EntryPTR->Value : NULL;
 		}
 
 		void Resize(Size_t Size)
@@ -80,7 +74,7 @@ namespace ART
 			}
 			else
 			{
-				Size_t RemoveIndex = Partition(0, Table.Count() - 1, Key);
+				Size_t RemoveIndex = GetIndexForKey(Key);
 				if(Table.Get(RemoveIndex)->Key == Key)
 				{
 					Table.DeleteElement(RemoveIndex);
@@ -116,7 +110,7 @@ namespace ART
 				return NULL;
 			}
 
-			Size_t Index = Partition(0, Table.Count() - 1, Key);
+			Size_t Index = GetIndexForKey(Key);
 
 			Entry_t *Entry = Table.Get(Index);
 			if(Entry && Entry->Key == Key)
@@ -148,56 +142,28 @@ namespace ART
 		}
 
 	private:
-		Size_t Partition(Size_t Low, Size_t High, Size_t Key) 
+		Size_t GetIndexForKey(Size_t Key) 
 		{
-			while(Low <= High) 
+			if(Table.Count() == 0)
+			{
+				return NULL;
+			}
+
+			Size_t Low = 0;
+			Size_t High = Table.Count();
+
+			while(Low < High)
 			{
 				Size_t Mid = Low + (High - Low) / 2;
-				Entry_t *MidEntry = Table.Get(Mid);
-				if(!MidEntry) 
-				{
-					bool FoundValid = false;
-					for(Size_t i = Mid; i >= Low; --i) 
-					{
-						if(Table.Get(i)) 
-						{
-							Mid = i;
-							FoundValid = true;
-							break;
-						}
-					}
-					if(!FoundValid)
-					{
-						for(Size_t i = Mid + 1; i <= High; ++i) 
-						{
-							if(Table.Get(i)) 
-							{
-								Mid = i;
-								FoundValid = true;
-								break;
-							}
-						}
-					}
-					if(!FoundValid)
-					{
-						return Low;
-					}
+				Entry_t *currentEntry = Table.Get(Mid);
 
-					MidEntry = Table.Get(Mid);
-				}
-
-				Size_t MidKey = MidEntry->Key;
-				if(MidKey == Key)
-				{
-					return Mid;
-				}
-				else if(MidKey < Key)
+				if(currentEntry->Key < Key)
 				{
 					Low = Mid + 1;
 				}
-				else 
+				else
 				{
-					High = Mid - 1;
+					High = Mid;
 				}
 			}
 
