@@ -328,4 +328,9 @@ namespace ART
 		}
 		return Angle;
 	}
+
+	inline float NormalizePitch(float Angle)
+	{
+		return Clamp(Angle, -89.f, 89.f);
+	}
 }
