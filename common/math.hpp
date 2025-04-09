@@ -190,6 +190,17 @@ namespace ART
 		return Out;
 	}
 
+	inline float Exp(float Value)
+	{
+		float Out;
+		_mm_store_ss(
+			&Out,
+			_mm_exp_ps(_mm_load_ps1(&Value))
+		);
+
+		return Out;
+	}
+
 	inline float Mod(float X, float Y)
 	{
 		float Out;
