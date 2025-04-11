@@ -76,6 +76,11 @@ namespace ART
 
 		bool Resize(Size_t NewSize)
 		{
+			if(ReservedCount == NewSize)
+			{
+				return TRUE;
+			}
+
 			T *NewData = (T *)ART::Realloc((void *)Data, NewSize * sizeof(T));
 			if(NewData != NULL)
 			{
