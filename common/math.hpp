@@ -34,6 +34,12 @@
 
 namespace ART
 {
+	inline bool IsNaN(float x)
+	{
+		union { float f; u32 u; } v = {x};
+		return (v.u & 0x7F800000) == 0x7F800000 && (v.u & 0x007FFFFF) != 0;
+	}
+
 	template <typename T = i32>
 	inline T Min(T a, T b)
 	{
