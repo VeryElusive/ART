@@ -5,7 +5,7 @@
 
 namespace ART
 {
-	float IntersectCapsule(ART::Vec3_t s1, ART::Vec3_t s2, ART::Vec3_t k1, ART::Vec3_t k2)
+	inline float IntersectCapsule(ART::Vec3_t s1, ART::Vec3_t s2, ART::Vec3_t k1, ART::Vec3_t k2)
 	{
 		const auto u = s2 - s1;
 		const auto v = k2 - k1;
