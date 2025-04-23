@@ -234,6 +234,49 @@ bool ART::StringNCompare(const wchar_t *String, const wchar_t *String2, Size_t S
 	return (ART::Memcmp(String, String2, StringLength) == 0);
 }
 
+bool ART::StringCompareCI(const char *String, const char *String2)
+{
+	return StringNCompareCI(String, String2, StringLength(String));
+}
+
+bool ART::StringNCompareCI(const char *String, const char *String2, Size_t StringLength)
+{
+	for(Size_t i = 0; i < StringLength; ++i)
+	{
+		char C1 = String[i];
+		char C2 = String2[i];
+
+		if(C1 >= 'A' && C1 <= 'Z') C1 += 32;
+		if(C2 >= 'A' && C2 <= 'Z') C2 += 32;
+
+		if(C1 != C2) return false;
+	}
+
+	return true;
+}
+
+bool ART::StringCompareCI(const wchar_t *String, const wchar_t *String2)
+{
+	return StringNCompareCI(String, String2, StringLength(String));
+}
+
+bool ART::StringNCompareCI(const wchar_t *String, const wchar_t *String2, Size_t StringLength)
+{
+	for(Size_t i = 0; i < StringLength; ++i)
+	{
+		wchar_t C1 = String[i];
+		wchar_t C2 = String2[i];
+
+		if(C1 >= L'A' && C1 <= L'Z') C1 += 32;
+		if(C2 >= L'A' && C2 <= L'Z') C2 += 32;
+
+		if(C1 != C2) return false;
+	}
+
+	return true;
+}
+
+
 char ART::ToLower(char Character)
 {
 	if(Character >= 'A' && Character <= 'Z')
