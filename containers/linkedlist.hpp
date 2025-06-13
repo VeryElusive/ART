@@ -120,7 +120,7 @@ namespace ART
 				return NULL;
 			}
 
-			return Head->GetData();
+			return &Head->GetData();
 		}
 
 		T *GetTail()
@@ -130,7 +130,7 @@ namespace ART
 				return NULL;
 			}
 
-			return Tail->GetData();
+			return &Tail->GetData();
 		}
 
 		CNode *&GetHeadNode()
