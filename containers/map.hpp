@@ -92,9 +92,20 @@ namespace ART
 			Table.Destroy(FreeMemory);
 		}
 
-		T *GetAtIndex(Size_t Index)
+		Entry_t *GetEntryAtIndex(Size_t Index)
 		{
 			Entry_t *Entry = Table.Get(Index);
+			if(Entry == NULL)
+			{
+				return NULL;
+			}
+
+			return Entry;
+		}
+
+		T *GetAtIndex(Size_t Index)
+		{
+			Entry_t *Entry = GetEntryAtIndex(Index);
 			if(Entry == NULL)
 			{
 				return NULL;
