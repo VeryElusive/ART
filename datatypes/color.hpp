@@ -9,22 +9,24 @@ namespace ART
 	{
 	public:
 		Color_t(u32 color = 0x000000ff) :
-			r((color >> 24) & 0xFF), g((color >> 16) & 0xFF), b((color >> 8) & 0xFF), a(color & 0xFF) {}
+			r((float)((color >> 24) & 0xFF)), g((float)((color >> 16) & 0xFF)), b((float)((color >> 8) & 0xFF)), a((float)(color & 0xFF)) {}
 
 		Color_t(int r, int g, int b, int a = 255) :
-			r(r), g(g), b(b), a(a) {}
+			r((float)r), g((float)g), b((float)b), a((float)a) {}
 
 		Color_t(int r, int g, int b, float a) :
-			r(r), g(g), b(b), a((u8)(int)(255.f * a)) {}
+			r((float)r), g((float)g), b((float)b), a(255.f * a) {}
 
-		Color_t(float r, float g, float b, float a = 1.f) :
-			r((u8)(u32)(r * 255.f)), g((u8)(u32)(g * 255.f)), b((u8)(u32)(b * 255.f)), a((u8)(u32)(a * 255.f)) {}
+		Color_t(float r, float g, float b, float a = 255.f) :
+			r(r), g(g), b(b), a(a) {}
 
+#if 0
 		Color_t(float Col[4]) :
-			r((u8)(u32)(Col[0] * 255.f)), g((u8)(u32)(Col[1] * 255.f)), b((u8)(u32)(Col[2] * 255.f)), a((u8)(u32)(Col[3] * 255.f)) {}
+			r(Col[0]), g(Col[1]), b(Col[2]), a(Col[3]) {}
+#endif
 
 		Color_t(u8 r, u8 g, u8 b, u8 a = 255) :
-			r(r), g(g), b(b), a(a) {}
+			r((float)r), g((float)g), b((float)b), a((float)a) {}
 
 		Color_t ScaleAlpha(float Alpha) const
 		{
@@ -43,10 +45,10 @@ namespace ART
 			t = ART::Min(t, 1.f);
 
 			Color_t ret(
-				(u8)ART::Clamp(ART::Lerp(t, (float)r, (float)To.r), 0.f, 255.f),
-				(u8)ART::Clamp(ART::Lerp(t, (float)g, (float)To.g), 0.f, 255.f),
-				(u8)ART::Clamp(ART::Lerp(t, (float)b, (float)To.b), 0.f, 255.f),
-				(u8)ART::Clamp(ART::Lerp(t, (float)a, (float)To.a), 0.f, 255.f)
+				ART::Clamp(ART::Lerp(t, (float)r, (float)To.r), 0.f, 255.f),
+				ART::Clamp(ART::Lerp(t, (float)g, (float)To.g), 0.f, 255.f),
+				ART::Clamp(ART::Lerp(t, (float)b, (float)To.b), 0.f, 255.f),
+				ART::Clamp(ART::Lerp(t, (float)a, (float)To.a), 0.f, 255.f)
 			);
 			return ret;
 		}
@@ -91,7 +93,7 @@ namespace ART
 				|| color.a != this->a;
 		}
 
-		u8 r, g, b, a = 255;
+		float r, g, b, a = 255.f;
 	};
 
 }
