@@ -44,6 +44,9 @@ namespace ART
 	void IntegerToString(i32 number, char *Buf, Size_t BufSize);
 	void FloatToString(float number, Size_t precision, char *Buf, Size_t BufSize);
 
+	void IntegerToString(i32 number, wchar_t *Buf, Size_t BufSize);
+	void FloatToString(float number, Size_t precision, wchar_t *Buf, Size_t BufSize);
+
 
 	char ToLower(char Character);
 	char ToUpper(char Character);

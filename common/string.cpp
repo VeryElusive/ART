@@ -402,3 +402,60 @@ void ART::FloatToString(float number, Size_t precision, char *Buf, Size_t BufSiz
 	}
 	*Ptr = '\0';
 }
+
+void ART::IntegerToString(i32 number, wchar_t *Buf, Size_t BufSize)
+{
+	bool IsNegative = (number < 0);
+	u32 AbsNumber = IsNegative ? -(u32)(number) : number;
+	wchar_t *Ptr = Buf + BufSize - 1;
+	*Ptr = '\0';
+
+	do {
+		*--Ptr = '0' + (AbsNumber % 10);
+		AbsNumber /= 10;
+	} while(AbsNumber > 0);
+
+	if(IsNegative) {
+		*--Ptr = '-';
+	}
+
+	Size_t Length = Buf + BufSize - Ptr - 1;
+	for(Size_t i = 0; i < Length; ++i)
+	{
+		Buf[i] = Ptr[i];
+	}
+	Buf[Length] = '\0';
+}
+
+void ART::FloatToString(float number, Size_t precision, wchar_t *Buf, Size_t BufSize)
+{
+	char TempBuffer[32];
+	IntegerToString((i32)number, TempBuffer, sizeof(TempBuffer));
+
+	Size_t IntPartLength = ART::StringLength(TempBuffer);
+	wchar_t *Ptr = Buf;
+
+	for(Size_t i = 0; i < IntPartLength && (Ptr - Buf) < BufSize - 1; ++i)
+	{
+		*Ptr++ = TempBuffer[i];
+	}
+
+	if((Ptr - Buf) < BufSize - 1)
+	{
+		*Ptr++ = '.';
+	}
+
+	float FractionPart = number - (i32)number;
+	if(FractionPart < 0)
+	{
+		FractionPart = -FractionPart;
+	}
+
+	for(Size_t i = 0; i < precision && (Ptr - Buf) < BufSize - 1; ++i)
+	{
+		FractionPart *= 10;
+		int Digit = (int)FractionPart % 10;
+		*Ptr++ = '0' + Digit;
+	}
+	*Ptr = '\0';
+}
