@@ -53,11 +53,11 @@ namespace ART
 			return TRUE;
 		}
 
-		bool Remove(CNode *Node)
+		CNode *Remove(CNode *Node)
 		{
 			if(Head == NULL || Node == NULL)
 			{
-				return FALSE;
+				return NULL;
 			}
 
 			if(Node == Head)
@@ -67,31 +67,34 @@ namespace ART
 				{
 					Tail = NULL;
 				}
+
+				ART::Free(Node);
+				--Size;
+				return NULL;
 			}
-			else
+
+			CNode *Prev = Head;
+			while(Prev->GetNext() != NULL && Prev->GetNext() != Node)
 			{
-				CNode *Prev = Head;
-				while(Prev->GetNext() != NULL && Prev->GetNext() != Node)
-				{
-					Prev = Prev->GetNext();
-				}
+				Prev = Prev->GetNext();
+			}
 
-				if(Prev->GetNext() == NULL)
-				{
-					return FALSE;
-				}
+			if(Prev->GetNext() == NULL)
+			{
+				return NULL;
+			}
 
-				Prev->GetNext() = Node->GetNext();
-				if(Node == Tail)
-				{
-					Tail = Prev;
-				}
+			Prev->GetNext() = Node->GetNext();
+			if(Node == Tail)
+			{
+				Tail = Prev;
 			}
 
 			ART::Free(Node);
 			--Size;
-			return TRUE;
+			return Prev;
 		}
+
 
 		Size_t Count()
 		{
