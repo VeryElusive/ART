@@ -60,15 +60,14 @@ namespace ART
 
 	inline float AbsF(float Value)
 	{
-		*(i32 *)(&Value) &= ~(0x80000000);
-
-		return Value;
+		union { float f; u32 i; } u = {Value};
+		u.i &= 0x7FFFFFFF;
+		return u.f;
 	}
 
 	inline i32 Abs(i32 Value)
 	{
-		Value &= ~(0x80000000);
-		return Value;
+		return Value < 0 ? (Value == INT_MIN ? INT_MAX : -Value) : Value;
 	}
 
 	inline float DegreeToRadians(float Degrees)
@@ -287,7 +286,7 @@ namespace ART
 		return Out;
 	}
 
-	
+
 	inline float Tanh(float Value)
 	{
 		float Out;
@@ -299,7 +298,7 @@ namespace ART
 		return Out;
 	}
 
-	
+
 	inline float Atanh(float Value)
 	{
 		float Out;
