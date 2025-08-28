@@ -36,6 +36,12 @@ typedef u32                Ptr_t;
 #define LLONG_MIN   (-9223372036854775807i64 - 1)
 #define ULLONG_MAX    0xffffffffffffffffui64
 
+#ifdef ART_64BIT
+#define UNSIGNED_MAX    ULLONG_MAX
+#else
+#define UNSIGNED_MAX      ULONG_MAX
+#endif
+
 #define _I8_MIN     (-127i8 - 1)
 #define _I8_MAX       127i8
 #define _UI8_MAX      0xffui8

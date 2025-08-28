@@ -16,6 +16,10 @@ namespace ART
 		{
 			return (this->X * v.X + this->Y * v.Y + this->Z * v.Z);
 		}
+		float Dot2(const Vec3_t &v) const
+		{
+			return this->X * v.Y + this->Y * v.X + this->Z * v.Z;
+		}
 
 		Vec3_t Cross(const Vec3_t &v) const
 		{

@@ -7,8 +7,8 @@ namespace ART
 {
 	namespace FNV1A
 	{
-#define BASIS 0xCBF29CE484222325ULL
-#define PRIME 0x100000001B3ULL
+#define BASIS 0xCBF29CE484221325ULL
+#define PRIME 0x100000001A3ULL
 
 		consteval u64 HashConst(const char *String, const u64 Key = BASIS)
 		{

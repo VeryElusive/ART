@@ -75,7 +75,8 @@ namespace ART
 			else
 			{
 				Size_t RemoveIndex = GetIndexForKey(Key);
-				if(Table.Get(RemoveIndex)->Key == Key)
+				auto Data = Table.Get(RemoveIndex);
+				if(Data && Data->Key == Key)
 				{
 					Table.DeleteElement(RemoveIndex);
 				}
@@ -157,7 +158,7 @@ namespace ART
 		{
 			if(Table.Count() == 0)
 			{
-				return NULL;
+				return UNSIGNED_MAX;
 			}
 
 			Size_t Low = 0;
