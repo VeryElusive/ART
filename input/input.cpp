@@ -74,6 +74,30 @@ void ART::UpdateInput(u32 Msg, u32 wParam, u32 lParam)
 
 		break;
 	}
+	case WM_SYSKEYDOWN:
+	{
+		if(wParam < 256 && wParam >= 0)
+		{
+			if(!KeyStates[wParam].Down)
+			{
+				KeyStates[wParam].Pressed = TRUE;
+				KeyStates[wParam].Toggled = !KeyStates[wParam].Toggled;
+			}
+			KeyStates[wParam].Down = TRUE;
+		}
+
+		break;
+	}
+	case WM_SYSKEYUP:
+	{
+		if(wParam < 256 && wParam >= 0)
+		{
+			KeyStates[wParam].Down = FALSE;
+			KeyStates[wParam].Released = TRUE;
+		}
+
+		break;
+	}
 	case WM_LBUTTONDOWN:
 	{
 		if(!KeyStates[ART::LBUTTON].Down)
