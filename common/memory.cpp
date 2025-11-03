@@ -74,72 +74,67 @@ namespace ART
 	/// <param name="Size">size in bytes</param>
 	void Memmove(void *Dest, const void *Src, size_t Size)
 	{
-		u8 *d = (u8 *)(Dest);
-		const u8 *s = (const u8 *)(Src);
+		u8 *d = (u8 *)Dest;
+		const u8 *s = (const u8 *)Src;
 
 		if(d < s || d >= s + Size)
 		{
-			// No overlap, can safely copy as in Memcpy
 			Memcpy(Dest, Src, Size);
 		}
 		else
 		{
-			// Overlapping memory, copy from end to avoid overwriting
 			d += Size;
 			s += Size;
 
 			while(Size >= 32)
 			{
-				__m256i data = _mm256_loadu_si256((const __m256i *)(s));
-				_mm256_storeu_si256((__m256i *)(d), data);
-
 				s -= 32;
 				d -= 32;
+
+				__m256i data = _mm256_loadu_si256((const __m256i *)s);
+				_mm256_storeu_si256((__m256i *)d, data);
 
 				Size -= 32;
 			}
 
 			while(Size >= 8)
 			{
-				*(volatile u64 *)(d) = *(u64 *)(s);
-
 				s -= 8;
 				d -= 8;
 
+				*(u64 *)d = *(const u64 *)s;
 				Size -= 8;
 			}
 
 			while(Size >= 4)
 			{
-				*(volatile u32 *)(d) = *(u32 *)(s);
-
 				s -= 4;
 				d -= 4;
 
+				*(u32 *)d = *(const u32 *)s;
 				Size -= 4;
 			}
 
 			while(Size >= 2)
 			{
-				*(volatile u16 *)(d) = *(u16 *)(s);
-
 				s -= 2;
 				d -= 2;
 
+				*(u16 *)d = *(const u16 *)s;
 				Size -= 2;
 			}
 
 			while(Size >= 1)
 			{
-				*(volatile u8 *)(d) = *(u8 *)(s);
-
 				s -= 1;
 				d -= 1;
 
+				*(u8 *)d = *(const u8 *)s;
 				Size -= 1;
 			}
 		}
 	}
+
 
 
 	/// <summary>
