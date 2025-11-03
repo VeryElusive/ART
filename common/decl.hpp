@@ -74,3 +74,18 @@ typedef u32                Ptr_t;
 #define FLT_NORMALIZE    0
 #define FLT_RADIX        2                       // exponent radix
 #define FLT_TRUE_MIN     1.401298464e-45F        // min positive value
+
+namespace ART
+{
+	inline bool IsFiniteFloat(float X)
+	{
+		union
+		{
+			float F;
+			unsigned int U;
+		} Value = {X};
+
+		unsigned int Exponent = (Value.U >> 23) & 0xFF;
+		return Exponent != 0xFF;
+	}
+}
