@@ -7,11 +7,65 @@ namespace ART
 {
 	struct Vec2_t
 	{
+		Vec2_t &operator /= (float fl)
+		{
+			this->X /= fl;
+			this->Y /= fl;
+
+			return (*this);
+		}
+
+		inline float Dot(const Vec2_t &v) const
+		{
+			return (this->X * v.X + this->Y * v.Y);
+		}
+
+		inline float LengthSquared() const
+		{
+			return (this->Dot(*this));
+		}
+
+		inline float Length() const
+		{
+			return (ART::Sqrt(this->LengthSquared()));
+		}
+
+		inline bool IsValid() const
+		{
+			return ART::IsFiniteFloat(X) && ART::IsFiniteFloat(Y);
+		}
+
+		inline float Normalize() 
+		{
+			if(!this->IsValid())
+			{
+				return 0.f;
+			}
+
+			float l = this->Length();
+			if(l != 0.f)
+			{
+				this->X /= l;
+				this->Y /= l;
+			}
+			else
+			{
+				this->X = this->Y = 0.0f;
+			}
+
+			return l;
+		}
+
 		float X, Y;
 	};
 
 	struct Vec3_t
 	{
+		Vec2_t ToVector2D() const
+		{
+			return Vec2_t(this->X, this->Y);
+		}
+
 		float Dot(const Vec3_t &v) const
 		{
 			return (this->X * v.X + this->Y * v.Y + this->Z * v.Z);
@@ -133,9 +187,14 @@ namespace ART
 			{
 				Vec3_t TMP;
 				TMP.X = 0.f; TMP.Y = 0.f; TMP.Z = 1.f;
+
 				if(Right)
 				{
 					*Right = this->Cross(TMP);
+					if(Right->LengthSquared() < 1e-6f)
+					{
+						*Right = this->Cross(Vec3_t{1.f, 0.f, 0.f});
+					}
 					*Right = Right->Normalized();
 
 					if(Up)
@@ -143,6 +202,15 @@ namespace ART
 						*Up = Right->Cross(*this);
 						*Up = Up->Normalized();
 					}
+				}
+				else if(Up)
+				{
+					*Up = TMP.Cross(*this);
+					if(Up->LengthSquared() < 1e-6f)
+					{
+						*Up = Vec3_t{1.f, 0.f, 0.f}.Cross(*this);
+					}
+					*Up = Up->Normalized();
 				}
 			}
 		}
