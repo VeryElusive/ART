@@ -159,8 +159,8 @@ namespace ART
 
 		while(Size >= 1)
 		{
-			d += 1;
 			*(u8 *)(d) = Value;
+			d += 1;
 
 			Size -= 1;
 		}
