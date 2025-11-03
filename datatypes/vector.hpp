@@ -187,38 +187,23 @@ namespace ART
 			{
 				Vec3_t TMP;
 				TMP.X = 0.f; TMP.Y = 0.f; TMP.Z = 1.f;
+				auto Right2 = Vec3_t(0.f, 0.f, 0.f);
+
+				Right2 = this->Cross(TMP);
+				if(Right2.LengthSquared() < 1e-6f)
+				{
+					Right2 = this->Cross(Vec3_t{1.f, 0.f, 0.f});
+				}
+				Right2 = Right2.Normalized();
+				if(Up)
+				{
+					*Up = Right2.Cross(*this);
+					*Up = Up->Normalized();
+				}
 
 				if(Right)
 				{
-					*Right = this->Cross(TMP);
-					if(Right->LengthSquared() < 1e-6f)
-					{
-						*Right = this->Cross(Vec3_t{1.f, 0.f, 0.f});
-					}
-					*Right = Right->Normalized();
-
-					if(Up)
-					{
-						*Up = Right->Cross(*this);
-						*Up = Up->Normalized();
-					}
-				}
-				else if(Up)
-				{
-					auto Right2 = Vec3_t(0.f, 0.f, 0.f);
-
-					Right2 = this->Cross(TMP);
-					if(Right->LengthSquared() < 1e-6f)
-					{
-						Right2 = this->Cross(Vec3_t{1.f, 0.f, 0.f});
-					}
-					Right2 = Right2.Normalized();
-
-					if(Up)
-					{
-						*Up = Right2.Cross(*this);
-						*Up = Up->Normalized();
-					}
+					*Right = Right2;
 				}
 			}
 		}
