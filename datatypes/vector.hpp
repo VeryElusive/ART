@@ -205,12 +205,20 @@ namespace ART
 				}
 				else if(Up)
 				{
-					*Up = TMP.Cross(*this);
-					if(Up->LengthSquared() < 1e-6f)
+					auto Right2 = Vec3_t(0.f, 0.f, 0.f);
+
+					Right2 = this->Cross(TMP);
+					if(Right->LengthSquared() < 1e-6f)
 					{
-						*Up = Vec3_t{1.f, 0.f, 0.f}.Cross(*this);
+						Right2 = this->Cross(Vec3_t{1.f, 0.f, 0.f});
 					}
-					*Up = Up->Normalized();
+					Right2 = Right2.Normalized();
+
+					if(Up)
+					{
+						*Up = Right2.Cross(*this);
+						*Up = Up->Normalized();
+					}
 				}
 			}
 		}
