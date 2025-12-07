@@ -19,6 +19,16 @@ namespace ART
 		};
 		Size_t Count() { return ElementCount; }
 
+		void Copy(Vector<T> CopyVec)
+		{
+			if(CopyVec.Count())
+			{
+				this->Resize(CopyVec.Count());
+				ART::Memcpy(this->GetData(), CopyVec.GetData(), CopyVec.Count() * sizeof(CopyVec.GetData()[0]));
+			}
+			this->ElementCount = CopyVec.Count();
+		}
+
 		void Lock() { Spinlock.Lock(); };
 		void Unlock() { Spinlock.Unlock(); };
 
