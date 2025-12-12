@@ -75,6 +75,8 @@ bool ART::CFile::Open(const wchar_t *FilePath, EOpenMode Mode)
 	DWORD Access = 0;
 	DWORD Creation = 0;
 
+	DWORD Share = FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE;
+
 	switch(Mode)
 	{
 	case EOpenMode::READ:
@@ -98,7 +100,7 @@ bool ART::CFile::Open(const wchar_t *FilePath, EOpenMode Mode)
 	File = CreateFileW(
 		FilePath,
 		Access,
-		0,
+		Share,
 		NULL,
 		Creation,
 		FILE_ATTRIBUTE_NORMAL,
