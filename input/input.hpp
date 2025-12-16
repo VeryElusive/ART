@@ -15,6 +15,8 @@ namespace ART
 		bool Released;
 		bool Down;
 		bool Toggled;
+
+		u64 LastTickActivated;
 	};
 
 	// Call this from WndProc.

@@ -58,6 +58,7 @@ void ART::UpdateInput(u32 Msg, u32 wParam, u32 lParam)
 			{
 				KeyStates[wParam].Pressed = TRUE;
 				KeyStates[wParam].Toggled = !KeyStates[wParam].Toggled;
+				KeyStates[wParam].LastTickActivated = GetTickCount64();
 			}
 			KeyStates[wParam].Down = TRUE;
 		}
@@ -82,6 +83,7 @@ void ART::UpdateInput(u32 Msg, u32 wParam, u32 lParam)
 			{
 				KeyStates[wParam].Pressed = TRUE;
 				KeyStates[wParam].Toggled = !KeyStates[wParam].Toggled;
+				KeyStates[wParam].LastTickActivated = GetTickCount64();
 			}
 			KeyStates[wParam].Down = TRUE;
 		}
@@ -104,6 +106,7 @@ void ART::UpdateInput(u32 Msg, u32 wParam, u32 lParam)
 		{
 			KeyStates[ART::LBUTTON].Pressed = TRUE;
 			KeyStates[ART::LBUTTON].Toggled = !KeyStates[ART::LBUTTON].Toggled;
+			KeyStates[ART::LBUTTON].LastTickActivated = GetTickCount64();
 		}
 		KeyStates[ART::LBUTTON].Down = TRUE;
 		break;
@@ -120,6 +123,7 @@ void ART::UpdateInput(u32 Msg, u32 wParam, u32 lParam)
 		{
 			KeyStates[ART::RBUTTON].Pressed = TRUE;
 			KeyStates[ART::RBUTTON].Toggled = !KeyStates[ART::RBUTTON].Toggled;
+			KeyStates[ART::RBUTTON].LastTickActivated = GetTickCount64();
 		}
 		KeyStates[ART::RBUTTON].Down = TRUE;
 		break;
@@ -136,6 +140,7 @@ void ART::UpdateInput(u32 Msg, u32 wParam, u32 lParam)
 		{
 			KeyStates[ART::MBUTTON].Pressed = TRUE;
 			KeyStates[ART::MBUTTON].Toggled = !KeyStates[ART::MBUTTON].Toggled;
+			KeyStates[ART::MBUTTON].LastTickActivated = GetTickCount64();
 		}
 		KeyStates[ART::MBUTTON].Down = TRUE;
 		break;
@@ -157,6 +162,7 @@ void ART::UpdateInput(u32 Msg, u32 wParam, u32 lParam)
 			{
 				KeyStates[ART::XBUTTON1].Pressed = TRUE;
 				KeyStates[ART::XBUTTON1].Toggled = !KeyStates[ART::XBUTTON1].Toggled;
+				KeyStates[ART::XBUTTON1].LastTickActivated = GetTickCount64();
 			}
 			KeyStates[ART::XBUTTON1].Down = TRUE;
 		}
@@ -166,6 +172,7 @@ void ART::UpdateInput(u32 Msg, u32 wParam, u32 lParam)
 			{
 				KeyStates[ART::XBUTTON2].Pressed = TRUE;
 				KeyStates[ART::XBUTTON2].Toggled = !KeyStates[ART::XBUTTON2].Toggled;
+				KeyStates[ART::XBUTTON2].LastTickActivated = GetTickCount64();
 			}
 			KeyStates[ART::XBUTTON2].Down = TRUE;
 		}
