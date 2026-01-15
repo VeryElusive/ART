@@ -7,12 +7,102 @@ namespace ART
 {
 	struct Vec2_t
 	{
-		Vec2_t &operator /= (float fl)
-		{
-			this->X /= fl;
-			this->Y /= fl;
+		inline Vec2_t& operator /= (float k) {
+			this->x /= k;
+			this->y /= k;
+
+			return *this;
+		}
+
+		inline Vec2_t& operator *= (float k) {
+			this->x *= k;
+			this->y *= k;
+			return *this;
+		}
+
+		inline Vec2_t& operator -= (float k) {
+			this->x -= k;
+			this->y -= k;
+			return *this;
+		}
+
+		inline Vec2_t& operator += (float k) {
+			this->x += k;
+			this->y += k;
+			return *this;
+		}
+
+		inline Vec2_t operator / (float k) const {
+			Vec2_t n = *this;
+			n /= k;
+			return n;
+		}
+
+		inline Vec2_t operator * (float k) const {
+			Vec2_t n = *this;
+			n *= k;
+			return n;
+		}
+
+		inline Vec2_t operator - (float k) const {
+			Vec2_t n = *this;
+			n -= k;
+			return n;
+		}
+
+		inline Vec2_t operator + (float k) const {
+			Vec2_t n = *this;
+			n += k;
+			return n;
+		}
+
+		inline Vec2_t& operator /= (const Vec2_t& o) {
+			this->x /= o.x;
+			this->y /= o.y;
 
 			return (*this);
+		}
+
+		inline Vec2_t& operator *= (const Vec2_t& o) {
+			this->x *= o.x;
+			this->y *= o.y;
+			return *this;
+		}
+
+		inline Vec2_t& operator -= (const Vec2_t& o) {
+			this->x -= o.x;
+			this->y -= o.y;
+			return *this;
+		}
+
+		inline Vec2_t& operator += (const Vec2_t& o) {
+			this->x += o.x;
+			this->y += o.y;
+			return *this;
+		}
+
+		inline Vec2_t operator / (const Vec2_t& o) const {
+			Vec2_t n = *this;
+			n /= o;
+			return n;
+		}
+
+		inline Vec2_t operator * (const Vec2_t& o) const {
+			Vec2_t n = *this;
+			n *= o;
+			return n;
+		}
+
+		inline Vec2_t operator - (const Vec2_t& o) const {
+			Vec2_t n = *this;
+			n -= o;
+			return n;
+		}
+
+		inline Vec2_t operator + (const Vec2_t& o) const {
+			Vec2_t n = *this;
+			n += o;
+			return n;
 		}
 
 		inline float Dot(const Vec2_t &v) const
@@ -56,7 +146,19 @@ namespace ART
 			return l;
 		}
 
-		float X, Y;
+		Vec2_t(const Vec2_t& other) : x(other.x), y(other.y) { };
+		Vec2_t(float x, float y) : x(x), y(y) { };
+		constexpr Vec2_t() : x(0), y(0) { };
+
+		union {
+			struct {
+				float X, Y;
+			};
+			struct {
+				float x, y;
+			};
+			float m[2];
+		};
 	};
 
 	struct Vec3_t
@@ -361,20 +463,45 @@ namespace ART
 			static float Arr[3] = {X, Y, Z};
 			return Arr;
 		}
-		
+
+		Vec3_t(const Vec3_t& other) : X(other.x), Y(other.y), Z(other.z) { };
+
 		Vec3_t(int x, int y, int z) : X((float)(x)), Y((float)(y)), Z((float)(z)) {};
-		
+
 		Vec3_t(float x, float y, float z) : X(x), Y(y), Z(z) {};
-		
+
 		Vec3_t() : X(0.f), Y(0.f), Z(0.f) {};
 
-		constexpr Vec3_t(const float *Arr) : X(Arr[0]), Y(Arr[1]), Z(Arr[2]) {}
+		constexpr Vec3_t(const float* Arr) : X(Arr[0]), Y(Arr[1]), Z(Arr[2]) {}
 
-		float X, Y, Z;
+		union {
+			struct {
+				float X, Y, Z;
+			};
+			struct {
+				float x; 
+				union {
+					struct {
+						float y, z;
+					};
+					Vec2_t yz;
+				};
+			};
+			float m[3];
+			Vec2_t xy;
+		};
 	};
 
 	struct Vec4_t
 	{
-		float X, Y, Z, W;
+		union {
+			struct {
+				float X, Y, Z, W;
+			};
+			struct {
+				float x, y, z, w;
+			};
+			float m[4];
+		};
 	};
 }
