@@ -363,10 +363,7 @@ void ART::IntegerToString(i32 number, char *Buf, Size_t BufSize)
 	}
 
 	Size_t Length = Buf + BufSize - Ptr - 1;
-	for(Size_t i = 0; i < Length; ++i)
-	{
-		Buf[i] = Ptr[i];
-	}
+	ART::Memcpy(Buf, Ptr, Length);
 	Buf[Length] = '\0';
 }
 
@@ -420,10 +417,7 @@ void ART::IntegerToString(i32 number, wchar_t *Buf, Size_t BufSize)
 	}
 
 	Size_t Length = Buf + BufSize - Ptr - 1;
-	for(Size_t i = 0; i < Length; ++i)
-	{
-		Buf[i] = Ptr[i];
-	}
+	ART::Memcpy(Buf, Ptr, Length);
 	Buf[Length] = '\0';
 }
 
