@@ -34,6 +34,13 @@ namespace ART
 			return nullptr;
 		}
 
+		inline T *Push()
+		{
+			T *justAdded = &Data[Head];
+			Head = (Head + 1) & (Size - 1);
+			return justAdded;
+		}
+
 		inline T &operator[](size_t Index)
 		{
 			return Data[(Head - 1 - Index) & (Size - 1)];

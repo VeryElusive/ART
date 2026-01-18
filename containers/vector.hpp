@@ -64,7 +64,7 @@ namespace ART
 				return NULL;
 			}
 
-			return &Data[Index];
+ 			return &Data[Index];
 		}
 
 		// just for quick iteration.
@@ -152,12 +152,17 @@ namespace ART
 
 		inline T *Create(Size_t Index)
 		{
-			if(Index > ElementCount) return NULL;
+			if(Index > ElementCount)
+			{
+				return NULL;
+			}
 
 			if(ElementCount >= ReservedCount)
 			{
-				Size_t NewCapacity = (ReservedCount == 0) ? 1 : ReservedCount * 2;
-				if(Resize(NewCapacity) == FALSE) return NULL;
+				if(Resize(ReservedCount + 1) == FALSE)
+				{
+					return NULL;
+				}
 			}
 
 			if(Index < ElementCount)
@@ -212,6 +217,23 @@ namespace ART
 			ElementCount--;
 
 			return TRUE;
+		}
+
+		inline bool DeleteElementByElement(T *Element)
+		{
+			if(Data == NULL || Element == NULL || ElementCount == 0)
+			{
+				return FALSE;
+			}
+
+			Size_t Index = (Size_t)(Element - Data);
+
+			if(Index >= ElementCount || &Data[Index] != Element)
+			{
+				return FALSE;
+			}
+
+			return DeleteElement(Index);
 		}
 
 		/// <summary>

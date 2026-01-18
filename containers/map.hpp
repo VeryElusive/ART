@@ -103,8 +103,8 @@ namespace ART
 			if(Table.Count() > 0)
 			{
 				InsertIndex = GetIndexForKey(Key);
-
 				Entry_t *Existing = Table.Get(InsertIndex);
+
 				if(Existing && Existing->Key == Key)
 				{
 					return &Existing->Value;
@@ -115,6 +115,7 @@ namespace ART
 
 			if(EntryPTR)
 			{
+				ART::Memset(&EntryPTR->Value, 0, sizeof(T));
 				EntryPTR->Key = Key;
 				return &EntryPTR->Value;
 			}
