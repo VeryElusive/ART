@@ -40,20 +40,86 @@ namespace ART
 	public:
 		T *Insert(Size_t Key, T Value)
 		{
-			Entry_t Entry{Key, Value};
-			Entry_t *EntryPTR;
+			Size_t InsertIndex = 0;
 
-			if(Table.Count() == 0)
+			if(Table.Count() > 0)
 			{
-				EntryPTR = Table.PushBack(Entry);
-			}
-			else
-			{
-				Size_t InsertIndex = GetIndexForKey(Key);
-				EntryPTR = Table.Insert(InsertIndex, Entry);
+				InsertIndex = GetIndexForKey(Key);
+
+				Entry_t *Existing = Table.Get(InsertIndex);
+				if(Existing && Existing->Key == Key)
+				{
+					ART::Memcpy(&Existing->Value, &Value, sizeof(T));
+					return &Existing->Value;
+				}
 			}
 
-			return EntryPTR ? &EntryPTR->Value : NULL;
+			Entry_t *EntryPTR = Table.Create(InsertIndex);
+
+			if(EntryPTR)
+			{
+				EntryPTR->Key = Key;
+				ART::Memcpy(&EntryPTR->Value, &Value, sizeof(T));
+				return &EntryPTR->Value;
+			}
+
+			return NULL;
+		}
+
+		T *Insert(Size_t Key, T *Value)
+		{
+			Size_t InsertIndex = 0;
+
+			if(Table.Count() > 0)
+			{
+				InsertIndex = GetIndexForKey(Key);
+				Entry_t *Existing = Table.Get(InsertIndex);
+				if(Existing && Existing->Key == Key)
+				{
+					ART::Memcpy(&Existing->Value, Value, sizeof(T));
+					return &Existing->Value;
+				}
+			}
+
+			Entry_t *EntryPTR = Table.Create(InsertIndex);
+
+			if(EntryPTR)
+			{
+				EntryPTR->Key = Key;
+				if(Value) 
+				{
+					ART::Memcpy(&EntryPTR->Value, Value, sizeof(T));
+				}
+				return &EntryPTR->Value;
+			}
+
+			return NULL;
+		}
+
+		T *Insert(Size_t Key)
+		{
+			Size_t InsertIndex = 0;
+
+			if(Table.Count() > 0)
+			{
+				InsertIndex = GetIndexForKey(Key);
+
+				Entry_t *Existing = Table.Get(InsertIndex);
+				if(Existing && Existing->Key == Key)
+				{
+					return &Existing->Value;
+				}
+			}
+
+			Entry_t *EntryPTR = Table.Create(InsertIndex);
+
+			if(EntryPTR)
+			{
+				EntryPTR->Key = Key;
+				return &EntryPTR->Value;
+			}
+
+			return NULL;
 		}
 
 		void Resize(Size_t Size)

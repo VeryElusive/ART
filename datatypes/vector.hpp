@@ -494,6 +494,10 @@ namespace ART
 
 	struct Vec4_t
 	{
+		Vec4_t(const Vec3_t &other, const float OtherW) : X(other.x), Y(other.y), Z(other.z), W(OtherW) { };
+		Vec4_t(float x, float y, float z, float w) : X(x), Y(y), Z(z), W(w) {};
+		Vec4_t() : X(0.f), Y(0.f), Z(0.f), W(0.f) {};
+
 		union {
 			struct {
 				float X, Y, Z, W;

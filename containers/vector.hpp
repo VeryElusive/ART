@@ -17,9 +17,9 @@ namespace ART
 			ElementCount = 0;
 			Data = NULL;
 		};
-		Size_t Count() { return ElementCount; }
+		inline Size_t Count() { return ElementCount; }
 
-		void Copy(Vector<T> CopyVec)
+		inline void Copy(Vector<T> CopyVec)
 		{
 			if(CopyVec.Count())
 			{
@@ -29,10 +29,10 @@ namespace ART
 			this->ElementCount = CopyVec.Count();
 		}
 
-		void Lock() { Spinlock.Lock(); };
-		void Unlock() { Spinlock.Unlock(); };
+		inline void Lock() { Spinlock.Lock(); };
+		inline void Unlock() { Spinlock.Unlock(); };
 
-		Vector(Size_t InitialCapacity)
+		inline Vector(Size_t InitialCapacity)
 		{
 			ReservedCount = InitialCapacity;
 			ElementCount = 0;
@@ -42,7 +42,7 @@ namespace ART
 			}
 		}
 
-		void Destroy(bool FreeMemory = TRUE)
+		inline void Destroy(bool FreeMemory = TRUE)
 		{
 			ElementCount = 0;
 
@@ -57,7 +57,7 @@ namespace ART
 			}
 		}
 
-		T *Get(Size_t Index)
+		inline T *Get(Size_t Index)
 		{
 			if(Index >= ElementCount)
 			{
@@ -84,7 +84,7 @@ namespace ART
 		/// <param name="NewSize"></param>
 		/// <returns>true if was successful, false if unsuccessful</returns>
 
-		bool Resize(Size_t NewSize)
+		inline bool Resize(Size_t NewSize)
 		{
 			if(ReservedCount == NewSize)
 			{
@@ -107,7 +107,7 @@ namespace ART
 		/// </summary>
 		/// <param name="NewElement">New element to insert</param>
 		/// <returns>Pointer to the data in vector memory. Returns NULL if ran out of memory.</returns>
-		T *PushBack(T *NewElement)
+		inline T *PushBack(T *NewElement)
 		{
 			if(ElementCount >= ReservedCount)
 			{
@@ -129,25 +129,8 @@ namespace ART
 			return &Data[ElementCount - 1];
 		}
 
-
-		T *PushBack(T NewElement)
+		T *PushBack()
 		{
-			return PushBack(&NewElement);
-		}
-
-		/// <summary>
-		/// Allocates new memory, inserts element to data at a given index and shifts further elements to higher indexes
-		/// </summary>
-		/// <param name="Index">Index to insert to</param>
-		/// <param name="NewElement">New element to insert</param>
-		/// <returns>Pointer to the data in vector memory. Returns NULL if ran out of memory.</returns>
-		T *Insert(Size_t Index, T *NewElement)
-		{
-			if(Index > ElementCount)
-			{
-				return NULL;
-			}
-
 			if(ElementCount >= ReservedCount)
 			{
 				if(Resize(ElementCount + 1) == FALSE)
@@ -156,32 +139,50 @@ namespace ART
 				}
 			}
 
-			if(Index == ElementCount)
-			{
-				return PushBack(NewElement);
-			}
-
-			ART::Memmove
-			(
-				&Data[Index + 1],
-				&Data[Index],
-				(ElementCount - Index) * sizeof(T)
-			);
-
-			ART::Memcpy
-			(
-				&Data[Index],
-				NewElement,
-				sizeof(T)
-			);
-
 			ElementCount++;
 
-			return &Data[Index];
+			return &Data[ElementCount - 1];
 		}
 
 
-		T *Insert(Size_t Index, T NewElement)
+		T *PushBack(T NewElement)
+		{
+			return PushBack(&NewElement);
+		}
+
+		T *Create(Size_t Index)
+		{
+			if(Index > ElementCount) return NULL;
+
+			if(ElementCount >= ReservedCount)
+			{
+				Size_t NewCapacity = (ReservedCount == 0) ? 1 : ReservedCount * 2;
+				if(Resize(NewCapacity) == FALSE) return NULL;
+			}
+
+			if(Index < ElementCount)
+			{
+				ART::Memmove(
+					&Data[Index + 1],
+					&Data[Index],
+					(ElementCount - Index) * sizeof(T)
+				);
+			}
+
+			ElementCount++;
+			return &Data[Index];
+		}
+
+		inline T *Insert(Size_t Index, T *NewElement)
+		{
+			T *Slot = Create(Index);
+			if(Slot == NULL) return NULL;
+
+			ART::Memcpy(Slot, NewElement, sizeof(T));
+			return Slot;
+		}
+
+		inline T *Insert(Size_t Index, T NewElement)
 		{
 			return Insert(Index, &NewElement);
 		}
@@ -191,7 +192,7 @@ namespace ART
 		/// </summary>
 		/// <param name="Index">Index of element to delete.</param>
 		/// <returns> True if successful, false if unsuccessful. Will fail if ElementCount is 0, or index is above ElementCount.</returns>
-		bool DeleteElement(Size_t Index)
+		inline bool DeleteElement(Size_t Index)
 		{
 			if(ElementCount == 0 || Index >= ElementCount || Data == NULL)
 			{
@@ -217,7 +218,7 @@ namespace ART
 		/// Deletes the backmost element of the vector.
 		/// </summary>
 		/// <returns> True if successful, false if unsuccessful. Will fail if ElementCount is 0.</returns>
-		bool PopBack()
+		inline bool PopBack()
 		{
 			return DeleteElement(ElementCount - 1);
 		}
@@ -226,12 +227,12 @@ namespace ART
 		/// Deletes the frontmost element of the vector.
 		/// </summary>
 		/// <returns> True if successful, false if unsuccessful. Will fail if ElementCount is 0.</returns>
-		bool PopFront()
+		inline bool PopFront()
 		{
 			return DeleteElement(0);
 		}
 
-		T *GetData()
+		inline T *GetData()
 		{
 			return Data;
 		}
