@@ -38,7 +38,7 @@ namespace ART
 		};
 
 	public:
-		T *Insert(Size_t Key, T Value)
+		inline T *Insert(Size_t Key, T Value)
 		{
 			Size_t InsertIndex = 0;
 
@@ -66,7 +66,7 @@ namespace ART
 			return NULL;
 		}
 
-		T *Insert(Size_t Key, T *Value)
+		inline T *Insert(Size_t Key, T *Value)
 		{
 			Size_t InsertIndex = 0;
 
@@ -96,7 +96,7 @@ namespace ART
 			return NULL;
 		}
 
-		T *Insert(Size_t Key)
+		inline T *Insert(Size_t Key)
 		{
 			Size_t InsertIndex = 0;
 
@@ -122,12 +122,12 @@ namespace ART
 			return NULL;
 		}
 
-		void Resize(Size_t Size)
+		inline void Resize(Size_t Size)
 		{
 			Table.Resize(Size);
 		}
 
-		void Remove(Size_t Key)
+		inline void Remove(Size_t Key)
 		{
 			if(Table.Count() == 0)
 			{
@@ -149,17 +149,17 @@ namespace ART
 			}
 		}
 
-		Size_t Count()
+		inline Size_t Count()
 		{
 			return Table.Count();
 		}
 
-		void Destroy(bool FreeMemory = TRUE)
+		inline void Destroy(bool FreeMemory = TRUE)
 		{
 			Table.Destroy(FreeMemory);
 		}
 
-		Entry_t *GetEntryAtIndex(Size_t Index)
+		inline Entry_t *GetEntryAtIndex(Size_t Index)
 		{
 			Entry_t *Entry = Table.Get(Index);
 			if(Entry == NULL)
@@ -170,7 +170,7 @@ namespace ART
 			return Entry;
 		}
 
-		T *GetAtIndex(Size_t Index)
+		inline T *GetAtIndex(Size_t Index)
 		{
 			Entry_t *Entry = GetEntryAtIndex(Index);
 			if(Entry == NULL)
@@ -181,7 +181,7 @@ namespace ART
 			return &Entry->Value;
 		}
 
-		T *Get(Size_t Key)
+		inline T *Get(Size_t Key)
 		{
 			if(Table.Count() == 0)
 			{
@@ -199,12 +199,12 @@ namespace ART
 			return NULL;
 		}
 
-		void Lock()
+		inline void Lock()
 		{
 			Table.Lock();
 		}
 
-		void Unlock()
+		inline void Unlock()
 		{
 			Table.Unlock();
 		}
@@ -220,7 +220,7 @@ namespace ART
 		}
 
 	private:
-		Size_t GetIndexForKey(Size_t Key) 
+		inline Size_t GetIndexForKey(Size_t Key)
 		{
 			if(Table.Count() == 0)
 			{

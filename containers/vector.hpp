@@ -11,7 +11,7 @@ namespace ART
 	class Vector
 	{
 	public:
-		Vector()
+		inline Vector()
 		{
 			ReservedCount = 0;
 			ElementCount = 0;
@@ -129,7 +129,7 @@ namespace ART
 			return &Data[ElementCount - 1];
 		}
 
-		T *PushBack()
+		inline T *PushBack()
 		{
 			if(ElementCount >= ReservedCount)
 			{
@@ -145,12 +145,12 @@ namespace ART
 		}
 
 
-		T *PushBack(T NewElement)
+		inline T *PushBack(T NewElement)
 		{
 			return PushBack(&NewElement);
 		}
 
-		T *Create(Size_t Index)
+		inline T *Create(Size_t Index)
 		{
 			if(Index > ElementCount) return NULL;
 
