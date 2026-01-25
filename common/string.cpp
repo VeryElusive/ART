@@ -407,12 +407,14 @@ void ART::IntegerToString(i32 number, wchar_t *Buf, Size_t BufSize)
 	wchar_t *Ptr = Buf + BufSize - 1;
 	*Ptr = '\0';
 
-	do {
+	do 
+	{
 		*--Ptr = '0' + (AbsNumber % 10);
 		AbsNumber /= 10;
 	} while(AbsNumber > 0);
 
-	if(IsNegative) {
+	if(IsNegative) 
+	{
 		*--Ptr = '-';
 	}
 

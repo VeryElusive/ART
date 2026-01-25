@@ -15,9 +15,17 @@ i32						MouseY = 0;
 i32						MouseDeltaX = 0;
 i32						MouseDeltaY = 0;
 
-void ART::ModerateInput()
+void ART::ModerateInput(void *Window)
 {
 #ifdef _WIN32
+	if(GetForegroundWindow() != (HWND)Window)
+	{
+		for(int i = 0; i < 256; i++)
+		{
+			KeyStates[i].Down = FALSE;
+		}
+	}
+
 	for(Size_t i = 0; i < 256; i++)
 	{
 		KeyStates[i].Pressed = FALSE;

@@ -23,7 +23,7 @@ namespace ART
 	void UpdateInput(u32 Msg, u32 wParam, u32 lParam);
 
 	// Call this from your main loop AFTER inputs are processed.
-	void ModerateInput();
+	void ModerateInput(void *Window);
 
 	// Returns scroll distance this input cycle. Scroll distance is reset to 0 each time ModerateInput is called.
 	i32 GetScrollDistance();
