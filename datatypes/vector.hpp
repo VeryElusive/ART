@@ -184,7 +184,7 @@ namespace ART
 
 		Vec3_t Lerp(const ART::Vec3_t &other, float t) const
 		{
-			return ART::Vec3_t(x + t * (other.x - x),
+			return Vec3_t(x + t * (other.x - x),
 				y + t * (other.y - y),
 				z + t * (other.z - z));
 		}
