@@ -182,6 +182,13 @@ namespace ART
 			return Vec3_t(this->Y * v.Z - this->Z * v.Y, this->Z * v.X - this->X * v.Z, this->X * v.Y - this->Y * v.X);
 		}
 
+		Vec3_t Lerp(const ART::Vec3_t &other, float t) const
+		{
+			return ART::Vec3_t(x + t * (other.x - x),
+				y + t * (other.y - y),
+				z + t * (other.z - z));
+		}
+
 		float Dot(const float *v) const
 		{
 			return this->X * v[0] + this->Y * v[1] + this->Z * v[2];
