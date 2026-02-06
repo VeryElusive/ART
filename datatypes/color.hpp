@@ -10,16 +10,16 @@ namespace ART
 	class Color_t
 	{
 	public:
-		Color_t(u32 color = 0x000000ff) :
+		constexpr Color_t(u32 color = 0x000000ff) :
 			r((float)((color >> 24) & 0xFF)), g((float)((color >> 16) & 0xFF)), b((float)((color >> 8) & 0xFF)), a((float)(color & 0xFF)) {}
 
-		Color_t(int r, int g, int b, int a = 255) :
+		constexpr Color_t(int r, int g, int b, int a = 255) :
 			r((float)r), g((float)g), b((float)b), a((float)a) {}
 
-		Color_t(int r, int g, int b, float a) :
+		constexpr Color_t(int r, int g, int b, float a) :
 			r((float)r), g((float)g), b((float)b), a(255.f * a) {}
 
-		Color_t(float r, float g, float b, float a = 255.f) :
+		constexpr Color_t(float r, float g, float b, float a = 255.f) :
 			r(r), g(g), b(b), a(a) {}
 
 		Color_t(const Color32_t &Color32);
