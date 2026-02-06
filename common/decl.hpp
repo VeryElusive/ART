@@ -21,7 +21,6 @@ typedef u32                Size_t;
 typedef u32                Ptr_t;
 #endif
 
-
 #define MB_LEN_MAX    5
 #define SHRT_MIN    (-32768)
 #define SHRT_MAX      32767
@@ -74,6 +73,9 @@ typedef u32                Ptr_t;
 #define FLT_NORMALIZE    0
 #define FLT_RADIX        2                       // exponent radix
 #define FLT_TRUE_MIN     1.401298464e-45F        // min positive value
+
+// msvc, add definitions for other compilers later
+#define FORCEINLINE __forceinline
 
 namespace ART
 {

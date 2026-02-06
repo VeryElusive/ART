@@ -103,25 +103,25 @@ namespace ART
 	class Color32_t
 	{
 	public:
-		Color32_t(u32 color = 0x000000ff) :
+		constexpr Color32_t(u32 color = 0x000000ff) :
 			r((color >> 24) & 0xFF), g((color >> 16) & 0xFF), b((color >> 8) & 0xFF), a(color & 0xFF) {}
 
-		Color32_t(int r, int g, int b, int a = 255) :
+		constexpr Color32_t(int r, int g, int b, int a = 255) :
 			r(r), g(g), b(b), a(a) {}
 
-		Color32_t(int r, int g, int b, float a) :
+		constexpr Color32_t(int r, int g, int b, float a) :
 			r(r), g(g), b(b), a((u8)(int)(255.f * a)) {}
 
-		Color32_t(float r, float g, float b, float a = 1.f) :
+		constexpr Color32_t(float r, float g, float b, float a = 1.f) :
 			r((u8)(u32)(r * 255.f)), g((u8)(u32)(g * 255.f)), b((u8)(u32)(b * 255.f)), a((u8)(u32)(a * 255.f)) {}
 
-		Color32_t(float Col[4]) :
+		constexpr Color32_t(float Col[4]) :
 			r((u8)(u32)(Col[0] * 255.f)), g((u8)(u32)(Col[1] * 255.f)), b((u8)(u32)(Col[2] * 255.f)), a((u8)(u32)(Col[3] * 255.f)) {}
 
-		Color32_t(u8 r, u8 g, u8 b, u8 a = 255) :
+		constexpr Color32_t(u8 r, u8 g, u8 b, u8 a = 255) :
 			r(r), g(g), b(b), a(a) {}
 
-		Color32_t(Color_t Col) : 
+		constexpr Color32_t(Color_t Col) :
 			r((u8)(u32)Col.r), g((u8)(u32)Col.g), b((u8)(u32)Col.b), a((u8)(u32)Col.a) {}
 
 		Color32_t ScaleAlpha(float Alpha) const
