@@ -17,7 +17,7 @@ namespace ART
 			ElementCount = 0;
 			Data = NULL;
 		};
-		inline Size_t Count() { return ElementCount; }
+		inline Size_t &Count() { return ElementCount; }
 
 		inline void Copy(Vector<T> CopyVec)
 		{

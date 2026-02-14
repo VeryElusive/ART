@@ -150,7 +150,7 @@ namespace ART
 			}
 		}
 
-		inline Size_t Count()
+		inline Size_t &Count()
 		{
 			return Table.Count();
 		}
@@ -218,6 +218,11 @@ namespace ART
 		CValueIterator end()
 		{
 			return CValueIterator(Table.end());
+		}
+
+		inline void *GetData()
+		{
+			return Table.GetData();
 		}
 
 	private:
