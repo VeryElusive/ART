@@ -2,6 +2,7 @@
 
 #ifdef _WIN32
 #include <windows.h>
+#include <windowsx.h> 
 #else
 
 #endif
@@ -42,17 +43,25 @@ void ART::ModerateInput(void *Window)
 }
 
 #ifdef _WIN32
-void ART::UpdateInput(u32 Msg, u32 wParam, u32 lParam)
+void ART::UpdateInput(void *Hwnd, float InternalWidth, float InternalHeight, u32 Msg, u32 wParam, u32 lParam)
 {
 	switch(Msg)
 	{
 	case WM_MOUSEMOVE:
 	{
+		RECT clientRect;
+		GetClientRect((HWND)Hwnd, &clientRect);
+		int WindowWidth = clientRect.right - clientRect.left;
+		int WindowHeight = clientRect.bottom - clientRect.top;
+
+		const int RawX = GET_X_LPARAM(lParam);
+		const int RawY = GET_Y_LPARAM(lParam);
+
 		const int OldX = MouseX;
 		const int OldY = MouseY;
 
-		MouseX = LOWORD(lParam);
-		MouseY = HIWORD(lParam);
+		MouseX = (int)(RawX * ((float)InternalWidth / WindowWidth));
+		MouseY = (int)(RawY * ((float)InternalHeight / WindowHeight));
 
 		MouseDeltaX += MouseX - OldX;
 		MouseDeltaY += MouseY - OldY;

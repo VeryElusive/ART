@@ -20,7 +20,7 @@ namespace ART
 	};
 
 	// Call this from WndProc.
-	void UpdateInput(u32 Msg, u32 wParam, u32 lParam);
+	void UpdateInput(void *Hwnd, float InternalWidth, float InternalHeight, u32 Msg, u32 wParam, u32 lParam);
 
 	// Call this from your main loop AFTER inputs are processed.
 	void ModerateInput(void *Window);
