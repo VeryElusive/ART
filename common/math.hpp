@@ -192,6 +192,20 @@ namespace ART
 		return Out;
 	}
 
+	inline float Modff(float In, float *FloatPart) 
+	{
+		__m128 val = _mm_set_ss(In);
+
+		__m128 iPart = _mm_round_ss(val, val, _MM_FROUND_TO_ZERO | _MM_FROUND_NO_EXC);
+		__m128 fPart = _mm_sub_ss(val, iPart);
+
+		_mm_store_ss(FloatPart, iPart);
+
+		float result;
+		_mm_store_ss(&result, fPart);
+		return result;
+	}
+
 	inline float Mod(float X, float Y)
 	{
 		float Out;
