@@ -168,6 +168,11 @@ namespace ART
 			return Vec2_t(this->X, this->Y);
 		}
 
+		float Dot2D(const Vec3_t &v) const
+		{
+			return (this->X * v.X + this->Y * v.Y);
+		}
+
 		float Dot(const Vec3_t &v) const
 		{
 			return (this->X * v.X + this->Y * v.Y + this->Z * v.Z);
