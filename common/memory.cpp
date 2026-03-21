@@ -103,7 +103,7 @@ namespace ART
 			}
 		}
 
-		if(Size >= 8)
+		while(Size >= 8)
 		{
 			*(u64 *)d = *(u64 *)s;
 			d += 8; s += 8; Size -= 8;
@@ -164,7 +164,7 @@ namespace ART
 					d += 16; s += 16; Size -= 16;
 				}
 			}
-			if(Size >= 8) { *(u64 *)d = *(u64 *)s; d += 8; s += 8; Size -= 8; }
+			while(Size >= 8) { *(u64 *)d = *(u64 *)s; d += 8; s += 8; Size -= 8; }
 			if(Size >= 4) { *(u32 *)d = *(u32 *)s; d += 4; s += 4; Size -= 4; }
 			if(Size >= 2) { *(u16 *)d = *(u16 *)s; d += 2; s += 2; Size -= 2; }
 			if(Size >= 1) { *d = *s; }
@@ -190,7 +190,7 @@ namespace ART
 					_mm_storeu_si128((__m128i *)d, _mm_loadu_si128((const __m128i *)s));
 				}
 			}
-			if(Size >= 8) { d -= 8; s -= 8; Size -= 8; *(u64 *)d = *(u64 *)s; }
+			while(Size >= 8) { d -= 8; s -= 8; Size -= 8; *(u64 *)d = *(u64 *)s; }
 			if(Size >= 4) { d -= 4; s -= 4; Size -= 4; *(u32 *)d = *(u32 *)s; }
 			if(Size >= 2) { d -= 2; s -= 2; Size -= 2; *(u16 *)d = *(u16 *)s; }
 			if(Size >= 1) { d -= 1; s -= 1; *d = *s; }
@@ -238,7 +238,7 @@ namespace ART
 			}
 		}
 
-		if(Size >= 8)
+		while(Size >= 8)
 		{
 			u64 Fill64 = 0x0101010101010101ULL * Value;
 			*(u64 *)d = Fill64;
@@ -327,7 +327,7 @@ namespace ART
 			}
 		}
 
-		if(Size >= 8)
+		while(Size >= 8)
 		{
 			if(*(u64 *)p1 != *(u64 *)p2) goto tail_mismatch;
 			p1 += 8; p2 += 8; Size -= 8;
