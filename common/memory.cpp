@@ -34,23 +34,31 @@ namespace ART
 		int CpuInfo[4];
 		CPU_FLAGS Flags = CPU_NONE;
 
+		Cpuid(CpuInfo, 0);
+		int MaxLeaf = CpuInfo[0];
+		if(MaxLeaf < 1)
+		{
+			return Flags;
+		}
+
 		Cpuid(CpuInfo, 1);
 
-		if (CpuInfo[3] & (1 << 26))
+		if(CpuInfo[3] & (1 << 26))
+		{
 			Flags = (CPU_FLAGS)(Flags | CPU_SSE2);
+		}
 
-		int HasAVX     = (CpuInfo[2] & (1 << 28)) != 0;
+		int HasXSAVE = (CpuInfo[2] & (1 << 26)) != 0;
+		int HasAVX = (CpuInfo[2] & (1 << 28)) != 0;
 		int HasOSXSAVE = (CpuInfo[2] & (1 << 27)) != 0;
 
-		if (HasAVX && HasOSXSAVE)
+		if(HasAVX && HasOSXSAVE && HasXSAVE && MaxLeaf >= 7)
 		{
 			u64 Xcr0 = _xgetbv(0);
-
-			if ((Xcr0 & 0x6) == 0x6)
+			if((Xcr0 & 0x6) == 0x6)
 			{
 				CpuidEx(CpuInfo, 7, 0);
-
-				if (CpuInfo[1] & (1 << 5))
+				if(CpuInfo[1] & (1 << 5))
 				{
 					Flags = (CPU_FLAGS)(Flags | CPU_AVX2);
 				}
