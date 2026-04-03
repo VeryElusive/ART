@@ -13,8 +13,8 @@ i32						Scroll = 0;
 i32						MouseX = 0;
 i32						MouseY = 0;
 
-i32						MouseDeltaX = 0;
-i32						MouseDeltaY = 0;
+static i32						MouseDeltaX = 0;
+static i32						MouseDeltaY = 0;
 
 void ART::ModerateInput(void *Window)
 {

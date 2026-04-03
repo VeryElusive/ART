@@ -10,8 +10,8 @@ typedef short              i16;
 typedef unsigned short     u16;
 typedef int                i32;
 typedef unsigned int       u32;
-typedef __int64            i64;
-typedef unsigned __int64   u64;
+typedef long long          i64;
+typedef unsigned long long u64;
 
 #ifdef ART_64BIT
 typedef u64                Size_t;
@@ -31,9 +31,9 @@ typedef u32                Ptr_t;
 #define LONG_MIN    (-2147483647L - 1)
 #define LONG_MAX      2147483647L
 #define ULONG_MAX     0xffffffffUL
-#define LLONG_MAX     9223372036854775807i64
+#define LLONG_MAX     9223372036854775807ll
 #define LLONG_MIN   (-9223372036854775807i64 - 1)
-#define ULLONG_MAX    0xffffffffffffffffui64
+#define ULLONG_MAX    0xffffffffffffffffull
 
 #ifdef ART_64BIT
 #define UNSIGNED_MAX    ULLONG_MAX
@@ -74,8 +74,13 @@ typedef u32                Ptr_t;
 #define FLT_RADIX        2                       // exponent radix
 #define FLT_TRUE_MIN     1.401298464e-45F        // min positive value
 
-// msvc, add definitions for other compilers later
+#ifdef _MSC_VER
 #define FORCEINLINE __forceinline
+#define RETURN_ADDRESS() _ReturnAddress(0)
+#else
+#define FORCEINLINE __attribute__((always_inline)) inline
+#define RETURN_ADDRESS() __builtin_return_address(0)
+#endif
 
 namespace ART
 {
