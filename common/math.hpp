@@ -4,8 +4,10 @@
 
 #ifdef _MSC_VER
 #include <intrin.h>
+#define INTRIN_MSVC 1
 #elif defined(__GNUC__) || defined(__clang__)
 #include <immintrin.h>
+#define INTRIN_CLANG 1
 #endif
 
 #include <xmmintrin.h>
@@ -95,137 +97,157 @@ namespace ART
 	/* intrin */
 	inline float Cos(float Value)
 	{
+#if INTRIN_CLANG
+		return __builtin_cosf(Value);
+#else
 		float Out;
-		_mm_store_ss(
-			&Out,
-			_mm_cos_ps(_mm_load1_ps(&Value))
-		);
-
+		_mm_store_ss(&Out, _mm_cos_ps(_mm_load1_ps(&Value)));
 		return Out;
+#endif
 	}
 
 	inline float Sin(float Value)
 	{
+#if INTRIN_CLANG
+		return __builtin_sinf(Value);
+#else
 		float Out;
-		_mm_store_ss(
-			&Out,
-			_mm_sin_ps(_mm_load1_ps(&Value))
-		);
-
+		_mm_store_ss(&Out, _mm_sin_ps(_mm_load1_ps(&Value)));
 		return Out;
+#endif
 	}
 
 	inline float Asin(float Value)
 	{
+#if INTRIN_CLANG
+		return __builtin_asinf(Value);
+#else
 		float Out;
-		_mm_store_ss(
-			&Out,
-			_mm_asin_ps(_mm_load1_ps(&Value))
-		);
-
+		_mm_store_ss(&Out, _mm_asin_ps(_mm_load1_ps(&Value)));
 		return Out;
+#endif
 	}
 
 	inline float Acos(float Value)
 	{
+#if INTRIN_CLANG
+		return __builtin_acosf(Value);
+#else
 		float Out;
-		_mm_store_ss(
-			&Out,
-			_mm_acos_ps(_mm_load1_ps(&Value))
-		);
-
+		_mm_store_ss(&Out, _mm_acos_ps(_mm_load1_ps(&Value)));
 		return Out;
+#endif
 	}
 
 	inline float Sqrt(float Value)
 	{
+#if INTRIN_CLANG
+		// Clang lowers this directly to sqrtss — no libm needed
+		return __builtin_sqrtf(Value);
+#else
 		float Out;
-		_mm_store_ss(
-			&Out,
-			_mm_sqrt_ss(_mm_load_ss(&Value))
-		);
-
+		_mm_store_ss(&Out, _mm_sqrt_ss(_mm_load_ss(&Value)));
 		return Out;
+#endif
 	}
 
 	inline float Rsqrt(float Value)
 	{
+#if INTRIN_CLANG
+		// rsqrtss via SSE intrinsic — available in both
 		float Out;
-		_mm_store_ss(
-			&Out,
-			_mm_rsqrt_ss(_mm_load_ss(&Value))
-		);
-
+		_mm_store_ss(&Out, _mm_rsqrt_ss(_mm_load_ss(&Value)));
 		return Out;
+#else
+		float Out;
+		_mm_store_ss(&Out, _mm_rsqrt_ss(_mm_load_ss(&Value)));
+		return Out;
+#endif
 	}
 
 	inline float InvSqrt(float Value)
 	{
+#if INTRIN_CLANG
+		// _mm_invsqrt_ps is SVML-only; rsqrt_ss is the hardware equivalent
 		float Out;
-		_mm_store_ss(
-			&Out,
-			_mm_invsqrt_ps(_mm_load_ps1(&Value))
-		);
-
+		_mm_store_ss(&Out, _mm_rsqrt_ss(_mm_load_ss(&Value)));
 		return Out;
+#else
+		float Out;
+		_mm_store_ss(&Out, _mm_invsqrt_ps(_mm_load_ps1(&Value)));
+		return Out;
+#endif
 	}
 
 	inline float Pow(float Value, float Power)
 	{
+#if INTRIN_CLANG
+		return __builtin_powf(Value, Power);
+#else
 		float Out;
-		_mm_store_ss(
-			&Out,
-			_mm_pow_ps(_mm_load_ps1(&Value), _mm_load_ps1(&Power))
-		);
-
+		_mm_store_ss(&Out, _mm_pow_ps(_mm_load_ps1(&Value), _mm_load_ps1(&Power)));
 		return Out;
+#endif
 	}
 
 	inline float Exp(float Value)
 	{
+#if INTRIN_CLANG
+		return __builtin_expf(Value);
+#else
 		float Out;
-		_mm_store_ss(
-			&Out,
-			_mm_exp_ps(_mm_load_ps1(&Value))
-		);
-
+		_mm_store_ss(&Out, _mm_exp_ps(_mm_load_ps1(&Value)));
 		return Out;
+#endif
 	}
 
-	inline float Modff(float In, float *FloatPart) 
+	inline float Modff(float In, float *FloatPart)
 	{
+#if INTRIN_CLANG
+		// __builtin_modff requires libm; replicate the SSE2 truncation path for both
 		__m128 val = _mm_set_ss(In);
-
 		__m128 iPart = _mm_round_ss(val, val, _MM_FROUND_TO_ZERO | _MM_FROUND_NO_EXC);
 		__m128 fPart = _mm_sub_ss(val, iPart);
-
 		_mm_store_ss(FloatPart, iPart);
-
-		float result;
-		_mm_store_ss(&result, fPart);
-		return result;
+		float Result;
+		_mm_store_ss(&Result, fPart);
+		return Result;
+#else
+		__m128 val = _mm_set_ss(In);
+		__m128 iPart = _mm_round_ss(val, val, _MM_FROUND_TO_ZERO | _MM_FROUND_NO_EXC);
+		__m128 fPart = _mm_sub_ss(val, iPart);
+		_mm_store_ss(FloatPart, iPart);
+		float Result;
+		_mm_store_ss(&Result, fPart);
+		return Result;
+#endif
 	}
 
 	inline float Mod(float X, float Y)
 	{
+#if INTRIN_CLANG
+		// _mm_fmod_ps is SVML; compute via truncated division: X - trunc(X/Y)*Y
+		__m128 xv = _mm_set_ss(X);
+		__m128 yv = _mm_set_ss(Y);
+		__m128 div = _mm_div_ss(xv, yv);
+		__m128 trunc = _mm_round_ss(div, div, _MM_FROUND_TO_ZERO | _MM_FROUND_NO_EXC);
+		__m128 rem = _mm_sub_ss(xv, _mm_mul_ss(trunc, yv));
 		float Out;
-		_mm_store_ss(
-			&Out,
-			_mm_fmod_ps(_mm_load_ss(&X), _mm_load_ss(&Y))
-		);
-
+		_mm_store_ss(&Out, rem);
 		return Out;
+#else
+		float Out;
+		_mm_store_ss(&Out, _mm_fmod_ps(_mm_load_ss(&X), _mm_load_ss(&Y)));
+		return Out;
+#endif
 	}
 
 	inline float Ceil(float Value)
 	{
+		// _mm_round_ss is SSE4.1, available in both MSVC and Clang
 		float Out;
 		__m128 In = _mm_load_ss(&Value);
-		_mm_store_ss(
-			&Out,
-			_mm_round_ss(In, In, _MM_FROUND_TO_POS_INF | _MM_FROUND_NO_EXC)
-		);
-
+		_mm_store_ss(&Out, _mm_round_ss(In, In, _MM_FROUND_TO_POS_INF | _MM_FROUND_NO_EXC));
 		return Out;
 	}
 
@@ -233,11 +255,7 @@ namespace ART
 	{
 		float Out;
 		__m128 In = _mm_load_ss(&Value);
-		_mm_store_ss(
-			&Out,
-			_mm_round_ss(In, In, _MM_FROUND_TO_NEG_INF | _MM_FROUND_NO_EXC)
-		);
-
+		_mm_store_ss(&Out, _mm_round_ss(In, In, _MM_FROUND_TO_NEG_INF | _MM_FROUND_NO_EXC));
 		return Out;
 	}
 
@@ -245,69 +263,63 @@ namespace ART
 	{
 		float Out;
 		__m128 In = _mm_load_ss(&Value);
-		_mm_store_ss(
-			&Out,
-			_mm_round_ss(In, In, _MM_FROUND_TO_NEAREST_INT | _MM_FROUND_NO_EXC)
-		);
-
+		_mm_store_ss(&Out, _mm_round_ss(In, In, _MM_FROUND_TO_NEAREST_INT | _MM_FROUND_NO_EXC));
 		return Out;
 	}
 
 	inline float Tan(float Value)
 	{
+#if INTRIN_CLANG
+		return __builtin_tanf(Value);
+#else
 		float Out;
-		_mm_store_ss(
-			&Out,
-			_mm_tan_ps(_mm_load1_ps(&Value))
-		);
-
+		_mm_store_ss(&Out, _mm_tan_ps(_mm_load1_ps(&Value)));
 		return Out;
+#endif
 	}
 
 	inline float Atan(float Value)
 	{
+#if INTRIN_CLANG
+		return __builtin_atanf(Value);
+#else
 		float Out;
-		_mm_store_ss(
-			&Out,
-			_mm_atan_ps(_mm_load1_ps(&Value))
-		);
-
+		_mm_store_ss(&Out, _mm_atan_ps(_mm_load1_ps(&Value)));
 		return Out;
+#endif
 	}
 
 	inline float Atan2(float Value, float Dividor)
 	{
+#if INTRIN_CLANG
+		return __builtin_atan2f(Value, Dividor);
+#else
 		float Out;
-		_mm_store_ss(
-			&Out,
-			_mm_atan2_ps(_mm_load1_ps(&Value), _mm_load1_ps(&Dividor))
-		);
-
+		_mm_store_ss(&Out, _mm_atan2_ps(_mm_load1_ps(&Value), _mm_load1_ps(&Dividor)));
 		return Out;
+#endif
 	}
-
 
 	inline float Tanh(float Value)
 	{
+#if INTRIN_CLANG
+		return __builtin_tanhf(Value);
+#else
 		float Out;
-		_mm_store_ss(
-			&Out,
-			_mm_tanh_ps(_mm_load1_ps(&Value))
-		);
-
+		_mm_store_ss(&Out, _mm_tanh_ps(_mm_load1_ps(&Value)));
 		return Out;
+#endif
 	}
-
 
 	inline float Atanh(float Value)
 	{
+#if INTRIN_CLANG
+		return __builtin_atanhf(Value);
+#else
 		float Out;
-		_mm_store_ss(
-			&Out,
-			_mm_atanh_ps(_mm_load1_ps(&Value))
-		);
-
+		_mm_store_ss(&Out, _mm_atanh_ps(_mm_load1_ps(&Value)));
 		return Out;
+#endif
 	}
 
 	/* Combinations */
