@@ -3,6 +3,7 @@
 #ifdef _MSC_VER
 #include <intrin.h>
 #elif defined(__GNUC__) || defined(__clang__)
+#include <x86intrin.h>
 #include <immintrin.h>
 #endif
 
@@ -21,12 +22,30 @@ namespace ART
 
 	static void Cpuid(int out[4], int leaf)
 	{
+#ifdef _MSC_VER
 		__cpuid(out, leaf);
+#else
+		__asm__ volatile(
+			"cpuid"
+			: "=a" (out[0]), "=b" (out[1]), "=c" (out[2]), "=d" (out[3])
+			: "a" (leaf), "c" (0)
+			: "memory"
+		);
+#endif
 	}
 
 	static void CpuidEx(int out[4], int leaf, int subleaf)
 	{
+#ifdef _MSC_VER
 		__cpuidex(out, leaf, subleaf);
+#else
+		__asm__ volatile(
+			"cpuid"
+			: "=a" (out[0]), "=b" (out[1]), "=c" (out[2]), "=d" (out[3])
+			: "a" (leaf), "c" (subleaf)
+			: "memory"
+		);
+#endif
 	}
 
 	CPU_FLAGS GetCpuFlags()
@@ -74,7 +93,7 @@ namespace ART
 	/// <param name="Dest">destination address</param>
 	/// <param name="Src">source address</param>
 	/// <param name="Size">size in bytes</param>
-	void Memcpy(void *Dest, const void *Src, size_t Size)
+	void Memcpy(void *Dest, const void *Src, Size_t Size)
 	{
 		if(CPUFLagsHasBeenChecked == FALSE)
 		{
@@ -141,7 +160,7 @@ namespace ART
 	/// <param name="Dest">destination address</param>
 	/// <param name="Src">source address</param>
 	/// <param name="Size">size in bytes</param>
-	void Memmove(void *Dest, const void *Src, size_t Size)
+	void Memmove(void *Dest, const void *Src, Size_t Size)
 	{
 		if(CPUFLagsHasBeenChecked == FALSE)
 		{
@@ -211,7 +230,7 @@ namespace ART
 	/// <param name="Dest">Destination address</param>
 	/// <param name="Value">Value in which bytes are set to</param>
 	/// <param name="Size">Size in bytes</param>
-	void Memset(void *Dest, u8 Value, size_t Size)
+	void Memset(void *Dest, u8 Value, Size_t Size)
 	{
 		if(CPUFLagsHasBeenChecked == FALSE)
 		{
@@ -278,9 +297,13 @@ namespace ART
 
 	static inline u32 GetFirstMismatchIndex(u32 Mask) 
 	{
+#ifdef _MSC_VER
 		unsigned long Index;
 		_BitScanForward(&Index, ~Mask);
 		return (u32)Index;
+#else
+		return (u32)__builtin_ctz(~Mask);
+#endif
 	}
 
 	/// <summary>
@@ -290,7 +313,7 @@ namespace ART
 	/// <param name="Buf2">Memory address to check against</param>
 	/// <param name="Size">Size of bytes to check</param>
 	/// <returns>0 if the buffers are equal, -1 if the first mismatch byte in Buf1 is less than Buf2, or 1 if the first mismatch byte in Buf1 is greater than Buf2</returns>
-	i32 Memcmp(const void *Buf1, const void *Buf2, size_t Size)
+	i32 Memcmp(const void *Buf1, const void *Buf2, Size_t Size)
 	{
 		if(CPUFLagsHasBeenChecked == FALSE)
 		{
