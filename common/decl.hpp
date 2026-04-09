@@ -1,4 +1,5 @@
 #pragma once
+#pragma warning(disable: 4005) // macro redefinition
 
 #define NULL 0
 #define FALSE 0
