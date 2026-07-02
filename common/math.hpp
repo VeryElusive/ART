@@ -46,6 +46,12 @@ namespace ART
 		return Max<T>(Min<T>(Value, Maximum), Minimum);
 	}
 
+	template<typename T>
+	inline T Sign(T x)
+	{
+		return (x > T(0)) - (x < T(0));
+	}
+
 	inline float AbsF(float Value)
 	{
 		union { float f; u32 i; } u = {Value};

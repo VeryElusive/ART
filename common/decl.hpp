@@ -78,6 +78,8 @@ typedef u32                Ptr_t;
 #ifdef _MSC_VER
 #define FORCEINLINE __forceinline
 #define RETURN_ADDRESS() _ReturnAddress(0)
+#define C_SECTION(x) __declspec(code_seg(x))
+#define D_SECTION(x) __declspec(allocate(x))
 #else
 #define FORCEINLINE __attribute__((always_inline)) inline
 #define RETURN_ADDRESS() __builtin_return_address(0)

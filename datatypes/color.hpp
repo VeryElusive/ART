@@ -63,6 +63,55 @@ namespace ART
 			return (0.299f * (float)r + 0.587f * (float)g + 0.114f * (float)b) / 255.f;
 		}
 
+		Color_t Brighten(float Amount) const
+		{
+			Amount = ART::Clamp(Amount, 0.f, 1.f);
+
+			Color_t ret = *this;
+			ret.r = ART::Clamp(ret.r + (255.f - ret.r) * Amount, 0.f, 255.f);
+			ret.g = ART::Clamp(ret.g + (255.f - ret.g) * Amount, 0.f, 255.f);
+			ret.b = ART::Clamp(ret.b + (255.f - ret.b) * Amount, 0.f, 255.f);
+			return ret;
+		}
+
+		Color_t Darken(float Amount) const
+		{
+			Amount = ART::Clamp(Amount, 0.f, 1.f);
+
+			Color_t ret = *this;
+			ret.r = ART::Clamp(ret.r * (1.f - Amount), 0.f, 255.f);
+			ret.g = ART::Clamp(ret.g * (1.f - Amount), 0.f, 255.f);
+			ret.b = ART::Clamp(ret.b * (1.f - Amount), 0.f, 255.f);
+			return ret;
+		}
+
+		Color_t Saturate(float Amount) const
+		{
+			Amount = ART::Clamp(Amount, 0.f, 1.f);
+
+			const float Lum = GetBrightness() * 255.f;
+			const float Scale = 1.f + Amount;
+
+			Color_t ret = *this;
+			ret.r = ART::Clamp(Lum + (ret.r - Lum) * Scale, 0.f, 255.f);
+			ret.g = ART::Clamp(Lum + (ret.g - Lum) * Scale, 0.f, 255.f);
+			ret.b = ART::Clamp(Lum + (ret.b - Lum) * Scale, 0.f, 255.f);
+			return ret;
+		}
+
+		Color_t Desaturate(float Amount) const
+		{
+			Amount = ART::Clamp(Amount, 0.f, 1.f);
+
+			const float Lum = GetBrightness() * 255.f;
+
+			Color_t ret = *this;
+			ret.r = ART::Clamp(ART::Lerp(Amount, ret.r, Lum), 0.f, 255.f);
+			ret.g = ART::Clamp(ART::Lerp(Amount, ret.g, Lum), 0.f, 255.f);
+			ret.b = ART::Clamp(ART::Lerp(Amount, ret.b, Lum), 0.f, 255.f);
+			return ret;
+		}
+
 		Color_t &operator=(u32 color)
 		{
 			r = (color >> 24) & 0xFF;
@@ -146,6 +195,55 @@ namespace ART
 				(u8)ART::Clamp(ART::Lerp(t, (float)b, (float)To.b), 0.f, 255.f),
 				(u8)ART::Clamp(ART::Lerp(t, (float)a, (float)To.a), 0.f, 255.f)
 			);
+			return ret;
+		}
+
+		Color32_t Brighten(float Amount) const
+		{
+			Amount = ART::Clamp(Amount, 0.f, 1.f);
+
+			Color32_t ret = *this;
+			ret.r = (u8)ART::Clamp((float)ret.r + (255.f - (float)ret.r) * Amount, 0.f, 255.f);
+			ret.g = (u8)ART::Clamp((float)ret.g + (255.f - (float)ret.g) * Amount, 0.f, 255.f);
+			ret.b = (u8)ART::Clamp((float)ret.b + (255.f - (float)ret.b) * Amount, 0.f, 255.f);
+			return ret;
+		}
+
+		Color32_t Darken(float Amount) const
+		{
+			Amount = ART::Clamp(Amount, 0.f, 1.f);
+
+			Color32_t ret = *this;
+			ret.r = (u8)ART::Clamp((float)ret.r * (1.f - Amount), 0.f, 255.f);
+			ret.g = (u8)ART::Clamp((float)ret.g * (1.f - Amount), 0.f, 255.f);
+			ret.b = (u8)ART::Clamp((float)ret.b * (1.f - Amount), 0.f, 255.f);
+			return ret;
+		}
+
+		Color32_t Saturate(float Amount) const
+		{
+			Amount = ART::Clamp(Amount, 0.f, 1.f);
+
+			const float Lum = GetBrightness() * 255.f;
+			const float Scale = 1.f + Amount;
+
+			Color32_t ret = *this;
+			ret.r = (u8)ART::Clamp(Lum + ((float)ret.r - Lum) * Scale, 0.f, 255.f);
+			ret.g = (u8)ART::Clamp(Lum + ((float)ret.g - Lum) * Scale, 0.f, 255.f);
+			ret.b = (u8)ART::Clamp(Lum + ((float)ret.b - Lum) * Scale, 0.f, 255.f);
+			return ret;
+		}
+
+		Color32_t Desaturate(float Amount) const
+		{
+			Amount = ART::Clamp(Amount, 0.f, 1.f);
+
+			const float Lum = GetBrightness() * 255.f;
+
+			Color32_t ret = *this;
+			ret.r = (u8)ART::Clamp(ART::Lerp(Amount, (float)ret.r, Lum), 0.f, 255.f);
+			ret.g = (u8)ART::Clamp(ART::Lerp(Amount, (float)ret.g, Lum), 0.f, 255.f);
+			ret.b = (u8)ART::Clamp(ART::Lerp(Amount, (float)ret.b, Lum), 0.f, 255.f);
 			return ret;
 		}
 
