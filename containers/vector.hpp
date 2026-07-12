@@ -40,6 +40,10 @@ namespace ART
 			{
 				Data = (T *)ART::Alloc(InitialCapacity * sizeof(T));
 			}
+			else
+			{
+				Data = NULL;
+			}
 		}
 
 		inline void Destroy(bool FreeMemory = TRUE)
