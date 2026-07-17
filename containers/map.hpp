@@ -123,9 +123,9 @@ namespace ART
 			return NULL;
 		}
 
-		inline void Resize(Size_t Size)
+		inline bool Resize(Size_t Size)
 		{
-			Table.Resize(Size);
+			return Table.Resize(Size);
 		}
 
 		inline void Remove(Size_t Key)

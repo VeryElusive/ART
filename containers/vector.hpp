@@ -21,11 +21,25 @@ namespace ART
 
 		inline void Copy(Vector<T> CopyVec)
 		{
-			if(CopyVec.Count())
+			if(CopyVec.GetData() == this->GetData())
 			{
-				this->Resize(CopyVec.Count());
-				ART::Memcpy(this->GetData(), CopyVec.GetData(), CopyVec.Count() * sizeof(CopyVec.GetData()[0]));
+				return;
 			}
+
+			if(CopyVec.Count() == 0)
+			{
+				this->ElementCount = 0;
+				return;
+			}
+
+			if(CopyVec.GetData() == NULL
+				|| CopyVec.Count() > (Size_t)-1 / sizeof(T)
+				|| !this->Resize(CopyVec.Count()))
+			{
+				return;
+			}
+
+			ART::Memcpy(this->GetData(), CopyVec.GetData(), CopyVec.Count() * sizeof(T));
 			this->ElementCount = CopyVec.Count();
 		}
 
@@ -34,15 +48,16 @@ namespace ART
 
 		inline Vector(Size_t InitialCapacity)
 		{
-			ReservedCount = InitialCapacity;
+			ReservedCount = 0;
 			ElementCount = 0;
-			if(InitialCapacity != 0)
+			Data = NULL;
+			if(InitialCapacity != 0 && InitialCapacity <= (Size_t)-1 / sizeof(T))
 			{
 				Data = (T *)ART::Alloc(InitialCapacity * sizeof(T));
-			}
-			else
-			{
-				Data = NULL;
+				if(Data != NULL)
+				{
+					ReservedCount = InitialCapacity;
+				}
 			}
 		}
 
@@ -95,6 +110,11 @@ namespace ART
 				return TRUE;
 			}
 
+			if(NewSize == 0 || NewSize > (Size_t)-1 / sizeof(T))
+			{
+				return FALSE;
+			}
+
 			T *NewData = (T *)ART::Realloc((void *)Data, NewSize * sizeof(T));
 			if(NewData != NULL)
 			{
@@ -113,6 +133,11 @@ namespace ART
 		/// <returns>Pointer to the data in vector memory. Returns NULL if ran out of memory.</returns>
 		inline T *PushBack(T *NewElement)
 		{
+			if(NewElement == NULL || ElementCount == (Size_t)-1)
+			{
+				return NULL;
+			}
+
 			if(ElementCount >= ReservedCount)
 			{
 				if(Resize(ElementCount + 1) == FALSE)
@@ -135,6 +160,11 @@ namespace ART
 
 		inline T *PushBack()
 		{
+			if(ElementCount == (Size_t)-1)
+			{
+				return NULL;
+			}
+
 			if(ElementCount >= ReservedCount)
 			{
 				if(Resize(ElementCount + 1) == FALSE)
@@ -156,7 +186,7 @@ namespace ART
 
 		inline T *Create(Size_t Index)
 		{
-			if(Index > ElementCount)
+			if(Index > ElementCount || ElementCount == (Size_t)-1)
 			{
 				return NULL;
 			}
