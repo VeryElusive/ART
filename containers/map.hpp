@@ -182,6 +182,17 @@ namespace ART
 			return &Entry->Value;
 		}
 
+		inline Size_t GetKeyAtIndex(Size_t Index)
+		{
+			Entry_t *Entry = GetEntryAtIndex(Index);
+			if(Entry == NULL)
+			{
+				return NULL;
+			}
+
+			return Entry->Key;
+		}
+
 		inline T *Get(Size_t Key)
 		{
 			if(Table.Count() == 0)
