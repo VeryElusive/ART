@@ -23,9 +23,15 @@ namespace ART
 
 			bool CreateThread(
 				Ptr_t *Thread, void *StartContext,
-				ThreadEntry_t Entry, void *Context
+				ThreadEntry_t Entry, void *Context, Ptr_t *ThreadID
 			);
 			void JoinThread(Ptr_t Thread);
+			void DetachThread(Ptr_t Thread);
+			Ptr_t GetCurrentThreadID();
+			void YieldThread();
+
+			void *AllocateThreadMemory(Size_t Size);
+			void FreeThreadMemory(void *Address, Size_t Size);
 
 			bool InitializeSemaphore(
 				void *Storage, i32 InitialCount, i32 MaximumCount
@@ -35,6 +41,7 @@ namespace ART
 			void DestroySemaphore(void *Storage);
 
 			void WaitAddress(volatile i32 *Address, i32 Value);
+			void WakeAddressOne(volatile i32 *Address);
 			void WakeAddressAll(volatile i32 *Address);
 		}
 	}

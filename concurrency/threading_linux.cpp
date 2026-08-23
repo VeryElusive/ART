@@ -6,7 +6,9 @@
 #include <limits.h>
 #include <linux/futex.h>
 #include <pthread.h>
+#include <sched.h>
 #include <semaphore.h>
+#include <sys/mman.h>
 #include <sys/syscall.h>
 #include <unistd.h>
 
@@ -43,6 +45,13 @@ namespace
 		auto StartContext = (ThreadStartContext *)Parameter;
 		StartContext->Entry(StartContext->Context);
 		return NULL;
+	}
+
+	Ptr_t EncodeThreadID(const pthread_t Thread)
+	{
+		Ptr_t Result = 0;
+		ART::Memcpy(&Result, &Thread, sizeof(Thread));
+		return Result;
 	}
 }
 
@@ -107,7 +116,7 @@ void ART::Threading::Platform::Pause()
 
 bool ART::Threading::Platform::CreateThread(
 	Ptr_t *Thread, void *StartContextStorage,
-	const ThreadEntry_t Entry, void *Context
+	const ThreadEntry_t Entry, void *Context, Ptr_t *ThreadID
 )
 {
 	if(Thread == NULL || StartContextStorage == NULL || Entry == NULL)
@@ -127,8 +136,11 @@ bool ART::Threading::Platform::CreateThread(
 		return false;
 	}
 
-	*Thread = 0;
-	ART::Memcpy(Thread, &NativeThread, sizeof(NativeThread));
+	*Thread = EncodeThreadID(NativeThread);
+	if(ThreadID != NULL)
+	{
+		*ThreadID = *Thread;
+	}
 	return true;
 }
 
@@ -137,6 +149,46 @@ void ART::Threading::Platform::JoinThread(const Ptr_t Thread)
 	pthread_t NativeThread;
 	ART::Memcpy(&NativeThread, &Thread, sizeof(NativeThread));
 	pthread_join(NativeThread, NULL);
+}
+
+void ART::Threading::Platform::DetachThread(const Ptr_t Thread)
+{
+	pthread_t NativeThread;
+	ART::Memcpy(&NativeThread, &Thread, sizeof(NativeThread));
+	pthread_detach(NativeThread);
+}
+
+Ptr_t ART::Threading::Platform::GetCurrentThreadID()
+{
+	return EncodeThreadID(pthread_self());
+}
+
+void ART::Threading::Platform::YieldThread()
+{
+	sched_yield();
+}
+
+void *ART::Threading::Platform::AllocateThreadMemory(const Size_t Size)
+{
+	if(Size == 0)
+	{
+		return NULL;
+	}
+	const auto Address = mmap(
+		NULL, Size, PROT_READ | PROT_WRITE,
+		MAP_PRIVATE | MAP_ANONYMOUS, -1, 0
+	);
+	return Address == MAP_FAILED ? NULL : Address;
+}
+
+void ART::Threading::Platform::FreeThreadMemory(
+	void *Address, const Size_t Size
+)
+{
+	if(Address != NULL && Size != 0)
+	{
+		munmap(Address, Size);
+	}
 }
 
 bool ART::Threading::Platform::InitializeSemaphore(
@@ -216,6 +268,14 @@ void ART::Threading::Platform::WaitAddress(
 	syscall(
 		SYS_futex, (i32 *)Address, FUTEX_WAIT_PRIVATE,
 		Value, NULL, NULL, 0
+	);
+}
+
+void ART::Threading::Platform::WakeAddressOne(volatile i32 *Address)
+{
+	syscall(
+		SYS_futex, (i32 *)Address, FUTEX_WAKE_PRIVATE,
+		1, NULL, NULL, 0
 	);
 }
 

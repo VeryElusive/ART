@@ -18,6 +18,10 @@ namespace
 	using CloseHandle_t = BOOL(WINAPI *)(HANDLE);
 	using GetActiveProcessorCount_t = DWORD(WINAPI *)(WORD);
 	using WaitOnAddress_t = BOOL(WINAPI *)(volatile VOID *, PVOID, SIZE_T, DWORD);
+	using VirtualAlloc_t = LPVOID(WINAPI *)(LPVOID, SIZE_T, DWORD, DWORD);
+	using VirtualFree_t = BOOL(WINAPI *)(LPVOID, SIZE_T, DWORD);
+	using NtYieldExecution_t = LONG(NTAPI *)();
+	using RtlWakeAddressSingle_t = VOID(NTAPI *)(PVOID);
 	using RtlWakeAddressAll_t = VOID(NTAPI *)(PVOID);
 
 	CreateThread_t CreateThreadFn = NULL;
@@ -27,6 +31,10 @@ namespace
 	CloseHandle_t CloseHandleFn = NULL;
 	GetActiveProcessorCount_t GetActiveProcessorCountFn = NULL;
 	WaitOnAddress_t WaitOnAddressFn = NULL;
+	VirtualAlloc_t VirtualAllocFn = NULL;
+	VirtualFree_t VirtualFreeFn = NULL;
+	NtYieldExecution_t NtYieldExecutionFn = NULL;
+	RtlWakeAddressSingle_t RtlWakeAddressSingleFn = NULL;
 	RtlWakeAddressAll_t RtlWakeAddressAllFn = NULL;
 	volatile i32 ImportState = 0;
 	volatile i32 ActiveProcessorCount = 0;
@@ -137,6 +145,10 @@ namespace
 	constexpr auto CloseHandleHash = Hash("CloseHandle");
 	constexpr auto GetActiveProcessorCountHash = Hash("GetActiveProcessorCount");
 	constexpr auto WaitOnAddressHash = Hash("WaitOnAddress");
+	constexpr auto VirtualAllocHash = Hash("VirtualAlloc");
+	constexpr auto VirtualFreeHash = Hash("VirtualFree");
+	constexpr auto NtYieldExecutionHash = Hash("NtYieldExecution");
+	constexpr auto RtlWakeAddressSingleHash = Hash("RtlWakeAddressSingle");
 	constexpr auto RtlWakeAddressAllHash = Hash("RtlWakeAddressAll");
 
 	u32 Hash(const char *String)
@@ -292,6 +304,18 @@ namespace
 		WaitOnAddressFn = (WaitOnAddress_t)GetModuleExport(
 			KernelBase, WaitOnAddressHash
 		);
+		VirtualAllocFn = (VirtualAlloc_t)GetModuleExport(
+			KernelBase, VirtualAllocHash
+		);
+		VirtualFreeFn = (VirtualFree_t)GetModuleExport(
+			KernelBase, VirtualFreeHash
+		);
+		NtYieldExecutionFn = (NtYieldExecution_t)GetModuleExport(
+			Ntdll, NtYieldExecutionHash
+		);
+		RtlWakeAddressSingleFn = (RtlWakeAddressSingle_t)GetModuleExport(
+			Ntdll, RtlWakeAddressSingleHash
+		);
 		RtlWakeAddressAllFn = (RtlWakeAddressAll_t)GetModuleExport(
 			Ntdll, RtlWakeAddressAllHash
 		);
@@ -303,6 +327,10 @@ namespace
 			&& CloseHandleFn != NULL
 			&& GetActiveProcessorCountFn != NULL
 			&& WaitOnAddressFn != NULL
+			&& VirtualAllocFn != NULL
+			&& VirtualFreeFn != NULL
+			&& NtYieldExecutionFn != NULL
+			&& RtlWakeAddressSingleFn != NULL
 			&& RtlWakeAddressAllFn != NULL;
 
 		_InterlockedExchange(
@@ -375,7 +403,7 @@ void ART::Threading::Platform::Pause()
 
 bool ART::Threading::Platform::CreateThread(
 	Ptr_t *Thread, void *StartContextStorage,
-	const ThreadEntry_t Entry, void *Context
+	const ThreadEntry_t Entry, void *Context, Ptr_t *ThreadID
 )
 {
 	if(Thread == NULL || StartContextStorage == NULL || Entry == NULL
@@ -387,14 +415,19 @@ bool ART::Threading::Platform::CreateThread(
 	auto StartContext = (ThreadStartContext *)StartContextStorage;
 	StartContext->Entry = Entry;
 	StartContext->Context = Context;
+	DWORD NativeThreadID = 0;
 	const auto Handle = CreateThreadFn(
-		NULL, 0, WindowsThreadEntry, StartContext, 0, NULL
+		NULL, 0, WindowsThreadEntry, StartContext, 0, &NativeThreadID
 	);
 	if(Handle == NULL)
 	{
 		return false;
 	}
 	*Thread = (Ptr_t)Handle;
+	if(ThreadID != NULL)
+	{
+		*ThreadID = (Ptr_t)NativeThreadID;
+	}
 	return true;
 }
 
@@ -406,6 +439,57 @@ void ART::Threading::Platform::JoinThread(const Ptr_t Thread)
 	}
 	WaitForSingleObjectFn((HANDLE)Thread, INFINITE);
 	CloseHandleFn((HANDLE)Thread);
+}
+
+void ART::Threading::Platform::DetachThread(const Ptr_t Thread)
+{
+	if(Thread != 0 && ResolveImports())
+	{
+		CloseHandleFn((HANDLE)Thread);
+	}
+}
+
+Ptr_t ART::Threading::Platform::GetCurrentThreadID()
+{
+#ifdef _WIN64
+	return (Ptr_t)__readgsqword(0x48);
+#else
+	return (Ptr_t)__readfsdword(0x24);
+#endif
+}
+
+void ART::Threading::Platform::YieldThread()
+{
+	if(ResolveImports())
+	{
+		NtYieldExecutionFn();
+	}
+	else
+	{
+		Pause();
+	}
+}
+
+void *ART::Threading::Platform::AllocateThreadMemory(const Size_t Size)
+{
+	if(Size == 0 || ResolveImports() == false)
+	{
+		return NULL;
+	}
+	return VirtualAllocFn(
+		NULL, (SIZE_T)Size,
+		MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE
+	);
+}
+
+void ART::Threading::Platform::FreeThreadMemory(
+	void *Address, const Size_t
+)
+{
+	if(Address != NULL && ResolveImports())
+	{
+		VirtualFreeFn(Address, 0, MEM_RELEASE);
+	}
 }
 
 bool ART::Threading::Platform::InitializeSemaphore(
@@ -480,6 +564,14 @@ void ART::Threading::Platform::WaitAddress(
 	else
 	{
 		Pause();
+	}
+}
+
+void ART::Threading::Platform::WakeAddressOne(volatile i32 *Address)
+{
+	if(RtlWakeAddressSingleFn != NULL)
+	{
+		RtlWakeAddressSingleFn((void *)Address);
 	}
 }
 

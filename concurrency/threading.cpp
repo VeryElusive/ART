@@ -5,6 +5,14 @@
 
 namespace
 {
+	void RunAllocatedThread(void *Parameter)
+	{
+		auto State = (ART::Threading::Detail::ThreadState *)Parameter;
+		State->Invoke(State->CallableStorage);
+		State->Destroy(State->CallableStorage);
+		ART::Threading::Detail::FreeThreadState(State);
+	}
+
 	void CompleteBatch(ART::Threading::Batch *Batch)
 	{
 		if(Batch != NULL
@@ -111,6 +119,30 @@ namespace
 	}
 }
 
+void ART::Threading::Mutex::Lock()
+{
+	Platform::Initialize();
+	for(;;)
+	{
+		if(Platform::AtomicCompareExchange(&State, 1, 0) == 0)
+		{
+			return;
+		}
+		Platform::WaitAddress(&State, 1);
+	}
+}
+
+bool ART::Threading::Mutex::TryLock()
+{
+	return Platform::AtomicCompareExchange(&State, 1, 0) == 0;
+}
+
+void ART::Threading::Mutex::Unlock()
+{
+	Platform::AtomicExchange(&State, 0);
+	Platform::WakeAddressOne(&State);
+}
+
 bool ART::Threading::Batch::IsComplete() const
 {
 	return Platform::AtomicCompareExchange(
@@ -147,6 +179,11 @@ void ART::Threading::SharedMutex::Lock()
 	Platform::AtomicDecrement(&WaitingWriters);
 }
 
+bool ART::Threading::SharedMutex::TryLock()
+{
+	return Platform::AtomicCompareExchange(&State, -1, 0) == 0;
+}
+
 void ART::Threading::SharedMutex::Unlock()
 {
 	Platform::AtomicExchange(&State, 0);
@@ -181,6 +218,21 @@ void ART::Threading::SharedMutex::LockShared()
 	}
 }
 
+bool ART::Threading::SharedMutex::TryLockShared()
+{
+	if(Platform::AtomicCompareExchange(&WaitingWriters, 0, 0) != 0)
+	{
+		return false;
+	}
+
+	const auto Readers = Platform::AtomicCompareExchange(&State, 0, 0);
+	return Readers >= 0
+		&& Platform::AtomicCompareExchange(&WaitingWriters, 0, 0) == 0
+		&& Platform::AtomicCompareExchange(
+			&State, Readers + 1, Readers
+		) == Readers;
+}
+
 void ART::Threading::SharedMutex::UnlockShared()
 {
 	if(Platform::AtomicDecrement(&State) == 0)
@@ -193,6 +245,107 @@ Size_t ART::Threading::GetProcessorCount()
 {
 	const auto Count = Platform::GetProcessorCount();
 	return Count == 0 ? 1 : Count;
+}
+
+ART::Threading::ThreadID_t ART::Threading::ThisThread::GetID()
+{
+	return Platform::GetCurrentThreadID();
+}
+
+void ART::Threading::ThisThread::Yield()
+{
+	Platform::YieldThread();
+}
+
+ART::Threading::Detail::ThreadState *
+ART::Threading::Detail::AllocateThreadState()
+{
+	auto State = (ThreadState *)Platform::AllocateThreadMemory(
+		sizeof(ThreadState)
+	);
+	if(State != NULL)
+	{
+		ART::Memset(State, 0, sizeof(ThreadState));
+	}
+	return State;
+}
+
+void ART::Threading::Detail::FreeThreadState(ThreadState *State)
+{
+	Platform::FreeThreadMemory(State, sizeof(ThreadState));
+}
+
+bool ART::Threading::Detail::StartThreadState(
+	ThreadState *State, Ptr_t *Thread, ThreadID_t *ThreadID
+)
+{
+	return Platform::CreateThread(
+		Thread, State->PlatformStartContext,
+		RunAllocatedThread, State, ThreadID
+	);
+}
+
+ART::Threading::Thread::Thread()
+	: Handle(0), ID(0)
+{
+}
+
+ART::Threading::Thread::~Thread()
+{
+	Join();
+}
+
+ART::Threading::Thread::Thread(Thread &&Other)
+	: Handle(Other.Handle), ID(Other.ID)
+{
+	Other.Handle = 0;
+	Other.ID = 0;
+}
+
+ART::Threading::Thread &ART::Threading::Thread::operator=(Thread &&Other)
+{
+	if(this == &Other)
+	{
+		return *this;
+	}
+	Join();
+	Handle = Other.Handle;
+	ID = Other.ID;
+	Other.Handle = 0;
+	Other.ID = 0;
+	return *this;
+}
+
+bool ART::Threading::Thread::Joinable() const
+{
+	return Handle != 0;
+}
+
+void ART::Threading::Thread::Join()
+{
+	if(Handle == 0)
+	{
+		return;
+	}
+	Platform::JoinThread(Handle);
+	Handle = 0;
+	ID = 0;
+}
+
+void ART::Threading::Thread::Detach()
+{
+	if(Handle == 0)
+	{
+		return;
+	}
+	Platform::DetachThread(Handle);
+	Handle = 0;
+	ID = 0;
+}
+
+ART::Threading::ThreadID_t ART::Threading::Thread::GetID() const
+{
+	return ID;
 }
 
 bool ART::Threading::Detail::SetThreadPoolWorkerLimit(
@@ -224,7 +377,7 @@ bool ART::Threading::Detail::SetThreadPoolWorkerLimit(
 		auto &Worker = Workers[State->WorkerCount];
 		if(Platform::CreateThread(
 			&Worker.Thread, Worker.StartContext,
-			RunThreadPoolWorker, State
+			RunThreadPoolWorker, State, NULL
 		) == false)
 		{
 			break;
