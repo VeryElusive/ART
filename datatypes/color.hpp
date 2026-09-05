@@ -271,7 +271,7 @@ namespace ART
 			return *this;
 		}
 
-		bool operator==(Color32_t color)
+		bool operator==(Color32_t color) const
 		{
 			return color.r == this->r
 				&& color.g == this->g
@@ -279,7 +279,7 @@ namespace ART
 				&& color.a == this->a;
 		}
 
-		bool operator!=(Color32_t color)
+		bool operator!=(Color32_t color) const
 		{
 			return color.r != this->r
 				|| color.g != this->g
