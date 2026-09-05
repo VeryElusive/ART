@@ -128,6 +128,11 @@ namespace ART
 			return Table.Resize(Size);
 		}
 
+		inline bool Reserve(Size_t MinimumCapacity)
+		{
+			return Table.Reserve(MinimumCapacity);
+		}
+
 		inline void Remove(Size_t Key)
 		{
 			if(Table.Count() == 0)

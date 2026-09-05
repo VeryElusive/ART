@@ -126,6 +126,26 @@ namespace ART
 			return FALSE;
 		}
 
+		inline bool Reserve(Size_t MinimumCapacity)
+		{
+			if(MinimumCapacity <= ReservedCount)
+			{
+				return TRUE;
+			}
+
+			Size_t NewCapacity = ReservedCount;
+			if(NewCapacity <= ((Size_t)-1 / sizeof(T)) / 2)
+			{
+				NewCapacity *= 2;
+			}
+			if(NewCapacity < MinimumCapacity)
+			{
+				NewCapacity = MinimumCapacity;
+			}
+
+			return Resize(NewCapacity);
+		}
+
 		/// <summary>
 		/// Allocates new memory and inserts it to the end of the data.
 		/// </summary>
