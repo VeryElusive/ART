@@ -122,7 +122,7 @@ namespace ART
 
 		inline bool IsValid() const
 		{
-			return ART::IsFiniteFloat(X) && ART::IsFiniteFloat(Y);
+			return ART::IsFinite(X) && ART::IsFinite(Y);
 		}
 
 		inline float Normalize() 

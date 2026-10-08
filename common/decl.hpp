@@ -87,7 +87,7 @@ typedef u32                Ptr_t;
 
 namespace ART
 {
-	inline bool IsFiniteFloat(float X)
+	inline bool IsFinite(float X)
 	{
 		union
 		{
