@@ -184,7 +184,7 @@ void ART::Threading::RecursiveMutex::Lock()
 bool ART::Threading::RecursiveMutex::TryLock()
 {
 	const Ptr_t Thread = Platform::GetCurrentThreadID();
-	StateMutex.Lock();
+	if(!StateMutex.TryLock()) return FALSE;
 	if(Depth != 0 && Owner == Thread)
 	{
 		Depth++;
