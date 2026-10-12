@@ -8,6 +8,63 @@
 #include <sys/stat.h>
 #endif
 
+#ifdef _WIN32
+bool PositionedTransfer(void *Handle, u64 Offset, void *Buffer, Size_t Length, Size_t *Transferred, bool Writing);
+
+bool ART::CPositionedFile::OpenRead(const wchar_t *Path)
+{
+	Close();
+	Handle = CreateFileW(Path, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING,
+		FILE_ATTRIBUTE_NORMAL | FILE_FLAG_OVERLAPPED, NULL);
+	return Handle != INVALID_HANDLE_VALUE;
+}
+
+bool ART::CPositionedFile::CreateNew(const wchar_t *Path)
+{
+	Close();
+	Handle = CreateFileW(Path, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_NEW,
+		FILE_ATTRIBUTE_NORMAL | FILE_FLAG_OVERLAPPED, NULL);
+	return Handle != INVALID_HANDLE_VALUE;
+}
+
+bool ART::CPositionedFile::ReadAt(u64 Offset, void *Buffer, Size_t Length, Size_t *Transferred)
+{
+	return PositionedTransfer(Handle, Offset, Buffer, Length, Transferred, FALSE);
+}
+
+bool ART::CPositionedFile::WriteAt(u64 Offset, const void *Buffer, Size_t Length)
+{
+	Size_t Transferred = 0;
+	return PositionedTransfer(Handle, Offset, (void *)Buffer, Length, &Transferred, TRUE)
+		&& Transferred == Length;
+}
+
+bool ART::CPositionedFile::GetSize(u64 *Size)
+{
+	LARGE_INTEGER Result{};
+	if(Size == NULL || !GetFileSizeEx(Handle, &Result) || Result.QuadPart < 0)
+	{
+		return FALSE;
+	}
+	*Size = (u64)Result.QuadPart;
+	return TRUE;
+}
+
+bool ART::CPositionedFile::Flush()
+{
+	return FlushFileBuffers(Handle) != FALSE;
+}
+
+void ART::CPositionedFile::Close()
+{
+	if(Handle != INVALID_HANDLE_VALUE)
+	{
+		CloseHandle(Handle);
+		Handle = INVALID_HANDLE_VALUE;
+	}
+}
+#endif
+
 bool ART::CFile::Open(const char *FilePath, EOpenMode Mode)
 {
 #ifdef _WIN32
@@ -207,3 +264,67 @@ Size_t ART::CFile::GetFileSize()
 	return -1;
 #endif
 }
+
+#ifdef _WIN32
+bool PositionedTransfer(void *Handle, u64 Offset, void *Buffer, Size_t Length, Size_t *Transferred, bool Writing)
+{
+	if(Transferred == NULL)
+	{
+		return FALSE;
+	}
+	*Transferred = 0;
+	if(Handle == INVALID_HANDLE_VALUE || (Length != 0 && Buffer == NULL)
+		|| Offset > 0x7FFFFFFFFFFFFFFFULL || Length > 0x7FFFFFFFFFFFFFFFULL - Offset)
+	{
+		return FALSE;
+	}
+	if(Length == 0)
+	{
+		return TRUE;
+	}
+	HANDLE Event = CreateEventW(NULL, TRUE, FALSE, NULL);
+	if(Event == NULL)
+	{
+		return FALSE;
+	}
+	bool Success = TRUE;
+	while(*Transferred < Length)
+	{
+		const Size_t Remaining = Length - *Transferred;
+		const DWORD Request = (DWORD)(Remaining > 0x40000000 ? 0x40000000 : Remaining);
+		const u64 Position = Offset + *Transferred;
+		OVERLAPPED Operation{};
+		Operation.Offset = (DWORD)Position;
+		Operation.OffsetHigh = (DWORD)(Position >> 32);
+		Operation.hEvent = Event;
+		ResetEvent(Event);
+		DWORD Completed = 0;
+		const BOOL Started = Writing
+			? WriteFile(Handle, (u8 *)Buffer + *Transferred, Request, &Completed, &Operation)
+			: ReadFile(Handle, (u8 *)Buffer + *Transferred, Request, &Completed, &Operation);
+		DWORD Error = Started ? ERROR_SUCCESS : GetLastError();
+		if(Error == ERROR_IO_PENDING)
+		{
+			Error = GetOverlappedResult(Handle, &Operation, &Completed, TRUE)
+				? ERROR_SUCCESS : GetLastError();
+		}
+		if(!Writing && Error == ERROR_HANDLE_EOF)
+		{
+			break;
+		}
+		if(Error != ERROR_SUCCESS)
+		{
+			Success = FALSE;
+			break;
+		}
+		*Transferred += Completed;
+		if(Completed != Request)
+		{
+			Success = !Writing;
+			break;
+		}
+	}
+	CloseHandle(Event);
+	return Success;
+}
+#endif
