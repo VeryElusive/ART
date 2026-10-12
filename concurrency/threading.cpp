@@ -163,6 +163,58 @@ void ART::Threading::Batch::Wait()
 	}
 }
 
+void ART::Threading::RecursiveMutex::Lock()
+{
+	const Ptr_t Thread = Platform::GetCurrentThreadID();
+	StateMutex.Lock();
+	if(Depth != 0 && Owner == Thread)
+	{
+		Depth++;
+		StateMutex.Unlock();
+		return;
+	}
+	StateMutex.Unlock();
+	Gate.Lock();
+	StateMutex.Lock();
+	Owner = Thread;
+	Depth = 1;
+	StateMutex.Unlock();
+}
+
+bool ART::Threading::RecursiveMutex::TryLock()
+{
+	const Ptr_t Thread = Platform::GetCurrentThreadID();
+	StateMutex.Lock();
+	if(Depth != 0 && Owner == Thread)
+	{
+		Depth++;
+		StateMutex.Unlock();
+		return TRUE;
+	}
+	const bool Locked = Gate.TryLock();
+	if(Locked)
+	{
+		Owner = Thread;
+		Depth = 1;
+	}
+	StateMutex.Unlock();
+	return Locked;
+}
+
+void ART::Threading::RecursiveMutex::Unlock()
+{
+	StateMutex.Lock();
+	if(Depth == 0 || Owner != Platform::GetCurrentThreadID())
+	{
+		StateMutex.Unlock();
+		return;
+	}
+	const bool Released = --Depth == 0;
+	if(Released) Owner = 0;
+	StateMutex.Unlock();
+	if(Released) Gate.Unlock();
+}
+
 void ART::Threading::SharedMutex::Lock()
 {
 	Platform::Initialize();
