@@ -40,4 +40,33 @@ namespace ART
 		QuickSort(Arr, pi);
 		QuickSort(Arr + pi + 1, Size - pi - 1);
 	}
+
+	// Bounded stack usage and O(n log n), including already sorted input.
+	template<typename T>
+	void HeapSort(T Arr[], Size_t Size)
+	{
+		if(Size < 2) return;
+		Size_t Start = Size / 2;
+		Size_t End = Size;
+		while(End > 1)
+		{
+			if(Start != 0)
+			{
+				Start--;
+			}
+			else
+			{
+				Detail::Swap(Arr[0], Arr[--End]);
+			}
+			Size_t Root = Start;
+			while(Root < End / 2)
+			{
+				Size_t Child = Root * 2 + 1;
+				if(Child + 1 < End && Arr[Child] < Arr[Child + 1]) Child++;
+				if(!(Arr[Root] < Arr[Child])) break;
+				Detail::Swap(Arr[Root], Arr[Child]);
+				Root = Child;
+			}
+		}
+	}
 }

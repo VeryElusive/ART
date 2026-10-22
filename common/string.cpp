@@ -12,7 +12,7 @@ Size_t ART::StringLength(const char *String)
 Size_t ART::StringNLength(const char *String, Size_t MaxLength)
 {
 	Size_t Length = 0;
-	for(; *String != '\0' && MaxLength > 0; ++String, ++Length, --MaxLength) {}
+	for(; MaxLength > 0 && *String != '\0'; ++String, ++Length, --MaxLength) {}
 
 	return Length;
 }
@@ -25,7 +25,7 @@ Size_t ART::StringLength(const wchar_t *String)
 Size_t ART::StringNLength(const wchar_t *String, Size_t MaxLength)
 {
 	Size_t Length = 0;
-	for(; *String != '\0' && MaxLength > 0; ++String, ++Length, --MaxLength) {}
+	for(; MaxLength > 0 && *String != '\0'; ++String, ++Length, --MaxLength) {}
 
 	return Length;
 }
@@ -217,6 +217,30 @@ const wchar_t *ART::StringNFindCI(const wchar_t *String, const wchar_t *SubStrin
 bool ART::StringCompare(const char *String, const char *String2)
 {
 	return StringNCompare(String, String2, StringLength(String));
+}
+
+bool ART::StringEqual(const char *String, const char *String2)
+{
+	const Size_t Length = StringLength(String);
+	return Length == StringLength(String2) && Memcmp(String, String2, Length) == 0;
+}
+
+bool ART::StringEqual(const wchar_t *String, const wchar_t *String2)
+{
+	const Size_t Length = StringLength(String);
+	return Length == StringLength(String2) && Memcmp(String, String2, Length * sizeof(wchar_t)) == 0;
+}
+
+bool ART::StringEqualCI(const char *String, const char *String2)
+{
+	const Size_t Length = StringLength(String);
+	return Length == StringLength(String2) && StringNCompareCI(String, String2, Length);
+}
+
+bool ART::StringEqualCI(const wchar_t *String, const wchar_t *String2)
+{
+	const Size_t Length = StringLength(String);
+	return Length == StringLength(String2) && StringNCompareCI(String, String2, Length);
 }
 
 bool ART::StringNCompare(const char *String, const char *String2, Size_t StringLength)

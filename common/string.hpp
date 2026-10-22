@@ -12,6 +12,10 @@ namespace ART
 
 	bool StringCompare(const char *String, const char *String2);
 	bool StringCompare(const wchar_t *String, const wchar_t *String2);
+	bool StringEqual(const char *String, const char *String2);
+	bool StringEqual(const wchar_t *String, const wchar_t *String2);
+	bool StringEqualCI(const char *String, const char *String2);
+	bool StringEqualCI(const wchar_t *String, const wchar_t *String2);
 
 	bool StringNCompare(const char *String, const char *String2, Size_t StringLength);
 	bool StringNCompare(const wchar_t *String, const wchar_t *String2, Size_t StringLength);

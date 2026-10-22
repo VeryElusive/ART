@@ -4,6 +4,28 @@
 
 namespace ART
 {
+#ifdef _WIN32
+	// Independent positioned operations; no shared seek cursor. Close requires
+	// callers to have drained their reads. Read opens deny write/delete sharing.
+	class CPositionedFile
+	{
+	public:
+		CPositionedFile() : Handle((void *)-1) {}
+		CPositionedFile(const CPositionedFile &) = delete;
+		CPositionedFile &operator=(const CPositionedFile &) = delete;
+		bool OpenRead(const wchar_t *Path);
+		bool CreateNew(const wchar_t *Path);
+		bool ReadAt(u64 Offset, void *Buffer, Size_t Length, Size_t *Transferred);
+		bool WriteAt(u64 Offset, const void *Buffer, Size_t Length);
+		bool GetSize(u64 *Size);
+		bool Flush();
+		void Close();
+	private:
+		void *Handle;
+	};
+
+#endif
+
 	enum EOpenMode
 	{
 		READ = (1 << 0),
