@@ -24,6 +24,22 @@ namespace ART
 			volatile i32 State;
 		};
 
+		class RecursiveMutex
+		{
+		public:
+			constexpr RecursiveMutex() : Owner(0), Depth(0) {}
+			RecursiveMutex(const RecursiveMutex &) = delete;
+			RecursiveMutex &operator=(const RecursiveMutex &) = delete;
+			void Lock();
+			bool TryLock();
+			void Unlock();
+		private:
+			Mutex Gate;
+			Mutex StateMutex;
+			Ptr_t Owner;
+			Size_t Depth;
+		};
+
 		class SharedMutex
 		{
 		public:
