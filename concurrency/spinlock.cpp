@@ -1,4 +1,5 @@
 #include "spinlock.hpp"
+#include "atomic.hpp"
 
 #ifdef _MSC_VER
 #include <intrin.h>
@@ -26,7 +27,7 @@ void ART::Spinlock::Lock()
 #ifdef _MSC_VER
 	while(_InterlockedCompareExchange(&LockSwitch, 1, 0) != 0)
 #else
-	while(__sync_val_compare_and_swap(&LockSwitch, 1, 0) != 0)	
+	while(__sync_val_compare_and_swap(&LockSwitch, 0, 1) != 0)
 #endif
 	{
 		while(LockSwitch != 0)
@@ -34,6 +35,11 @@ void ART::Spinlock::Lock()
 			PauseProcessor();
 		}
 	}
+}
+
+bool ART::Spinlock::TryLock()
+{
+	return Threading::Detail::CompareExchangeAcquire(&LockSwitch, 0, 1);
 }
 
 void ART::Spinlock::Unlock()
