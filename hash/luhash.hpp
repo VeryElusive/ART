@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ART/common/decl.hpp"
+#include "../common/decl.hpp"
 
 namespace ART
 {

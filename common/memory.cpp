@@ -1,4 +1,7 @@
 #include "memory.hpp"
+#ifdef ART_THREAD_SAFE_CPU_INIT
+#include "../concurrency/once.hpp"
+#endif
 
 #ifdef _MSC_VER
 #include <intrin.h>
@@ -87,6 +90,26 @@ namespace ART
 		return Flags;
 	}
 
+	static void EnsureCpuFlags()
+	{
+#ifdef ART_THREAD_SAFE_CPU_INIT
+		static constinit Threading::Once Once;
+		Once.Execute([]()
+		{
+			CPUFlags = GetCpuFlags();
+			CPUFLagsHasBeenChecked = TRUE;
+			return true;
+		});
+#else
+		// Preserve the original initialization path unless synchronization is requested.
+		if(CPUFLagsHasBeenChecked == FALSE)
+		{
+			CPUFLagsHasBeenChecked = TRUE;
+			CPUFlags = GetCpuFlags();
+		}
+#endif
+	}
+
 	/// <summary>
 	/// copies memory from one address to another
 	/// </summary>
@@ -95,11 +118,7 @@ namespace ART
 	/// <param name="Size">size in bytes</param>
 	void Memcpy(void *Dest, const void *Src, Size_t Size)
 	{
-		if(CPUFLagsHasBeenChecked == FALSE)
-		{
-			CPUFLagsHasBeenChecked = TRUE;
-			CPUFlags = GetCpuFlags();
-		}
+		EnsureCpuFlags();
 
 		u8 *d = (u8 *)Dest;
 		const u8 *s = (const u8 *)Src;
@@ -162,11 +181,7 @@ namespace ART
 	/// <param name="Size">size in bytes</param>
 	void Memmove(void *Dest, const void *Src, Size_t Size)
 	{
-		if(CPUFLagsHasBeenChecked == FALSE)
-		{
-			CPUFLagsHasBeenChecked = TRUE;
-			CPUFlags = GetCpuFlags();
-		}
+		EnsureCpuFlags();
 
 		u8 *d = (u8 *)Dest;
 		const u8 *s = (const u8 *)Src;
@@ -232,11 +247,7 @@ namespace ART
 	/// <param name="Size">Size in bytes</param>
 	void Memset(void *Dest, u8 Value, Size_t Size)
 	{
-		if(CPUFLagsHasBeenChecked == FALSE)
-		{
-			CPUFLagsHasBeenChecked = TRUE;
-			CPUFlags = GetCpuFlags();
-		}
+		EnsureCpuFlags();
 
 		u8 *d = (u8 *)(Dest);
 
@@ -315,11 +326,7 @@ namespace ART
 	/// <returns>0 if the buffers are equal, -1 if the first mismatch byte in Buf1 is less than Buf2, or 1 if the first mismatch byte in Buf1 is greater than Buf2</returns>
 	i32 Memcmp(const void *Buf1, const void *Buf2, Size_t Size)
 	{
-		if(CPUFLagsHasBeenChecked == FALSE)
-		{
-			CPUFLagsHasBeenChecked = TRUE;
-			CPUFlags = GetCpuFlags();
-		}
+		EnsureCpuFlags();
 		
 		const u8 *p1 = (const u8 *)Buf1;
 		const u8 *p2 = (const u8 *)Buf2;
